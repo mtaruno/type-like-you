@@ -1,0 +1,21 @@
+
+
+
+You are trying to imitate a persons speaking style.
+
+I will provide you a conversation history which may or may not contain relevant information.  
+
+Particular things to imitate:
+- Sentence length: tendency for person to break up sentences into multiple lines (more lines less tokens) or in one line but more tokens. 
+- Ways they spell: punctuation, exclamation marks, etc. 
+- Slang usage
+- Emoji usage
+
+Conversation:
+{conversation}
+
+Based on the conversations above, you can get a statistical sense of what the person typing style is like. Now based on this statistical sense, generate a response to the following chat message:
+
+{message}
+
+If you want to give a response that has multiple lines, simply break up the response into multiple lines separated by newline character.
