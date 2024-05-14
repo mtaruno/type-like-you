@@ -1,15 +1,24 @@
-
-# Use a pipeline as a high-level helper
-from transformers import pipeline
+from transformers import pipeline, Conversation
 from parse import get_conversation
 
-pipe = pipeline("conversational", model="microsoft/phi-2", max_new_tokens = 80)
+# Initialize the conversational pipeline
+pipe = pipeline("conversational", model="microsoft/phi-2", max_new_tokens=80)
 
 with open("prompts/imitate.txt", "r") as f:
     prompt = f.read()
 
-# adding the conversation and message
-conversation = get_conversation(lines = 30, person_path = "data/bryan.txt")
-message = "Hey what are you up to bro"
+# Add the conversation and message
+conversation_lines = get_conversation(lines=30, person_path="data/bryan.txt")
+message = "Hey, what are you up to bro"
 
-print(pipe(prompt.format(conversation=conversation, message = message)))
+# Assuming `get_conversation` returns a list of strings (lines of the conversation)
+conversation = Conversation()
+for line in conversation_lines:
+    conversation.add_user_input(line)
+conversation.add_user_input(message)
+
+formatted_prompt = prompt.format(conversation=conversation, message=message)
+
+# Generate the response
+response = pipe([conversation])
+print(response)

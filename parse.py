@@ -22,9 +22,12 @@ def get_conversation(lines, person_path):
             }
             parsed_data.append(entry)
 
+    # filtering to just the person's messages
+    parsed_data = [entry for entry in parsed_data if entry["name"] == 'Bryan Widjaja"]
+
     conversation = []
     # get N lines from the conversation
     for entry in parsed_data[:lines]:
         conversation.append(f"{entry['name']}: {entry['message']}")
 
-    return "\n".join(conversation)
+    return conversation
