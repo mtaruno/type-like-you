@@ -25,6 +25,6 @@ def get_conversation(lines, person_path):
     conversation = []
     # get N lines from the conversation
     for entry in parsed_data[:lines]:
-        conversation.append(f"{entry['person']}: {entry['message']}")
+        conversation.append(f"{entry['name']}: {entry['message']}")
 
     return "\n".join(conversation)
