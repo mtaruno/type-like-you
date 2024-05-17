@@ -5,12 +5,6 @@ The goal is to make an agent that is more casual, less robotic, more familiar. W
 1. talk-like-you vs regular LLM
 2. distinguish real human replies from talk-like-you
 
-
-### Tone Features
-- Sentence length: tendency for person to break up sentences into multiple lines (more lines less tokens) or in one line but more tokens.
-Ideally, this will involve creating a knowledge base. There is high maintenance cost to keep this knowledge base up to date. 
-
-
 ### Learned Tone Features
 - Sentence length: tendency for person to break up sentences into multiple lines (more lines less tokens) or in one line but more tokens. 
 - Ways they spell: punctuation, exclamation marks, etc. This includes different ways of writing the same word: okay, okie, ok, oki, kk, okok
