@@ -1,6 +1,17 @@
 import re
 
 def get_conversation(lines, person_path):
+
+    parsed_data = read_and_format(person_path)
+
+    # filtering to just the person's messages
+    parsed_data = [entry for entry in parsed_data if entry["name"] == 'Bryan Widjaja']
+
+    conversation = base_retriever(parsed_data, lines) 
+
+    return "\n".join(conversation)
+
+def read_and_format(person_path):
     # start with whatsapp dataset
     with open(person_path, "r") as f:
         data = f.read()
@@ -8,7 +19,7 @@ def get_conversation(lines, person_path):
     # regex to parse data 
     pattern = re.compile(r"\[(\d{2}/\d{2}/\d{2}), (\d{2}\.\d{2}\.\d{2})\] (\w+ \w+): (.+)")
 
-    # Extracting and organizing the data
+    # making into json list format
     parsed_data = []
     for line in data.split("\n"):
         match = pattern.search(line)
@@ -22,12 +33,15 @@ def get_conversation(lines, person_path):
             }
             parsed_data.append(entry)
 
-    # filtering to just the person's messages
-    parsed_data = [entry for entry in parsed_data if entry["name"] == 'Bryan Widjaja"]
+    return parsed_data
 
-    conversation = []
+def base_retriever(data: list[str], lines) -> list[str]:
+    conversation=[]
     # get N lines from the conversation
-    for entry in parsed_data[:lines]:
+    for entry in data[:lines]:
         conversation.append(f"{entry['name']}: {entry['message']}")
+    return conversation
 
+def representative_retriever(data: list[str]) -> list[str]:
+    conversation = []
     return conversation

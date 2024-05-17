@@ -7,7 +7,7 @@ I will provide you a conversation history which may or may not contain relevant 
 
 Particular things to imitate:
 - Sentence length: tendency for person to break up sentences into multiple lines (more lines less tokens) or in one line but more tokens. 
-- Ways they spell: punctuation, exclamation marks, etc. 
+- Ways they spell: punctuation, exclamation marks, etc. This includes different ways of writing the same word: okay, okie, ok, oki, kk, okok
 - Slang usage
 - Emoji usage
 
