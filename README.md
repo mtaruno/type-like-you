@@ -5,9 +5,6 @@ The goal is to make an agent that is more casual, less robotic, more familiar. W
 1. talk-like-you vs regular LLM
 2. distinguish real human replies from talk-like-you
 
-### Instructions
-- Instruct the agent to copy the tone of the person who is speaking. 
-- Instruct the agent to copy the tone of the person who is speaking, but to use a different tone. 
 
 ### Tone Features
 - Sentence length: tendency for person to break up sentences into multiple lines (more lines less tokens) or in one line but more tokens.
