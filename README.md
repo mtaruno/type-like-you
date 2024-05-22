@@ -5,6 +5,18 @@ The goal is to make an agent that is more casual, less robotic, more familiar. W
 1. talk-like-you vs regular LLM
 2. distinguish real human replies from talk-like-you
 
+### How to Run
+
+#### Flask demo webapp
+```
+python server.py
+```
+
+#### Running the API
+```
+python response.py -m <message>
+```
+
 ### Learned Tone Features
 - Sentence length: tendency for person to break up sentences into multiple lines (more lines less tokens) or in one line but more tokens. 
 - Ways they spell: punctuation, exclamation marks, etc. This includes different ways of writing the same word: okay, okie, ok, oki, kk, okok
