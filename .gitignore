@@ -1,2 +1,9 @@
 /data
 .env
+
+/frontend/node_modules
+/frontend/build
+
+/frontend/npm-debug.log*
+/frontend/yarn-debug.log*
+/frontend/yarn-error.log*
