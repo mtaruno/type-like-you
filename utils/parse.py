@@ -17,7 +17,7 @@ def get_conversation(lines, person_path, entire_conversation = False):
 
 def read_and_format(person_path):
     # start with whatsapp dataset
-    with open(person_path, "r") as f:
+    with open(person_path, "r", encoding='utf-8') as f:
         data = f.read()
 
     # regex to parse data 
