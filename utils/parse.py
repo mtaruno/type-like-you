@@ -1,11 +1,15 @@
 import re
 
-def get_conversation(lines, person_path):
+def get_conversation(lines, person_path, entire_conversation = False):
 
     parsed_data = read_and_format(person_path)
 
-    # filtering to just the person's messages
-    parsed_data = [entry for entry in parsed_data if entry["name"] == 'Bryan Widjaja']
+    # filtering to just the person's messages: don't think this is needed, model needs more context
+    # parsed_data = [entry for entry in parsed_data if entry["name"] == 'Bryan Widjaja']
+
+    if entire_conversation == True: 
+        return base_retriever(parsed_data, lines = len(parsed_data))
+        
 
     conversation = base_retriever(parsed_data, lines) 
 
