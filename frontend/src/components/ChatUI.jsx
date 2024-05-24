@@ -1,4 +1,4 @@
-import { TextBar, Message } from "./";
+import { TextBar, Message } from ".";
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 
