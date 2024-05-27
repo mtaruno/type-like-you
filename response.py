@@ -12,7 +12,7 @@ def get_response(system_response, user_message):
     # add user content
     messages.append(user_message)
     
-    return query_gpt4(messages=messages, model="gpt-4o", max_tokens=150).content
+    return query_gpt4(messages=messages, model="gpt-4o", max_tokens=1000).content
 
 def initialize_conversation(person_path = "data/bryan.txt"):
     ''' Gives the first sys response which is the prompt'''
@@ -22,15 +22,15 @@ def initialize_conversation(person_path = "data/bryan.txt"):
     
     # get conversation to add to prompt
     conversation = get_conversation(person_path = person_path, lines=50)
-    formatted_prompt = prompt.format(conversation=conversation, message=message)
+    formatted_prompt = prompt.format(conversation=conversation)
     print(formatted_prompt)
 
     print(f"Tokens: {len(formatted_prompt.split())}") # gpt4o max context length is 128k
     
-    sys_prompt ={
+    sys_obj ={
                     "role": "system",
                     "content": formatted_prompt}
-    return sys_prompt
+    return sys_obj
 
 if __name__ == "__main__":
 
@@ -40,10 +40,12 @@ if __name__ == "__main__":
     message = args.message
 
     sys_prompt = initialize_conversation("data/bryan.txt")
+
     message_obj = {
-                    "role": "user",
-                    "content": message,
-                }
+                "role": "user",
+                "content": message,
+            }
+
    
     response = get_response(sys_prompt,message_obj)
     print(response)
