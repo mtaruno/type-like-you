@@ -10,8 +10,8 @@ CORS(app)
 def chat():
     data = request.get_json()
     user_message = data.get('message')
-    system_response = data.get('response')
-    
+    system_response = data.get('system_response')
+
     if system_response == "":
         system_response = initialize_conversation("data/bryan.txt")
 
