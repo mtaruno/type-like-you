@@ -1,10 +1,10 @@
 const Message = ({ message }) => {
     return (
         <>
-            {message.message !== "" && (
+            {message.content !== "" && (
                 <div
                     className={`mb-2 flex ${
-                        message.person === "user"
+                        message.role === "user"
                             ? "justify-end"
                             : "justify-start"
                     }`}
@@ -12,12 +12,12 @@ const Message = ({ message }) => {
                     <div
                         className={`p-3 rounded-lg max-w-xs 
         ${
-            message.person === "user"
+            message.role === "user"
                 ? "bg-blue-500 text-white"
                 : "bg-gray-300 text-black"
         }`}
                     >
-                        <p>{message.message}</p>
+                        <p>{message.content}</p>
                     </div>
                 </div>
             )}

@@ -5,6 +5,7 @@ import axios from "axios";
 const ChatUI = () => {
     const [message, setMessage] = useState("");
     const [conversation, setConversation] = useState([]);
+    const [isStart, setIsStart] = useState(true);
 
     const messagesEndRef = useRef(null);
 
@@ -19,20 +20,22 @@ const ChatUI = () => {
     const getMessageResponse = async (message) => {
         try {
             const response = await axios.post("http://localhost:5000/chat", {
-                message: message,
+                message: { role: "user", content: message },
+                start: isStart,
             });
             console.log(response.data);
             const aiReply = response.data.reply;
-            addConversation("model", aiReply);
+            addConversation("system", aiReply);
+            setIsStart(false);
         } catch (error) {
             console.error("Error sending message:", error);
         }
     };
 
-    const addConversation = (person, message) => {
-        const messages = message
+    const addConversation = (role, content) => {
+        const messages = content
             .split("\n")
-            .map((line) => ({ person, message: line }));
+            .map((line) => ({ role, content: line }));
         setConversation((prevConversation) => [
             ...prevConversation,
             ...messages,
