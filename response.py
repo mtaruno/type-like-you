@@ -14,6 +14,23 @@ def get_response(system_response, user_message):
     
     return query_gpt4(messages=messages, model="gpt-4o", max_tokens=150).content
 
+def initialize_conversation(person_path = "data/bryan.txt"):
+    ''' Gives the first sys response which is the prompt'''
+   # get prompt
+    with open("prompts/imitate.txt", "r") as f:
+        prompt = f.read()
+    
+    # get conversation to add to prompt
+    conversation = get_conversation(person_path = person_path, lines=50)
+    formatted_prompt = prompt.format(conversation=conversation, message=message)
+    print(formatted_prompt)
+
+    print(f"Tokens: {len(formatted_prompt.split())}") # gpt4o max context length is 128k
+    
+    sys_prompt ={
+                    "role": "system",
+                    "content": formatted_prompt}
+    return sys_prompt
 
 if __name__ == "__main__":
 
@@ -22,21 +39,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     message = args.message
 
-    # get prompt
-    with open("prompts/imitate.txt", "r") as f:
-        prompt = f.read()
-    
-    # get conversation to add to prompt
-    conversation = get_conversation(lines=50, person_path="data/bryan.txt")
-    
-    formatted_prompt = prompt.format(conversation=conversation, message=message)
-    print(formatted_prompt)
-
-    print(f"Tokens: {len(formatted_prompt.split())}") # gpt4o max context length is 128k
-
-    sys_prompt = {
-                    "role": "system",
-                    "content": formatted_prompt}
+    sys_prompt = initialize_conversation("data/bryan.txt")
     message_obj = {
                     "role": "user",
                     "content": message,
