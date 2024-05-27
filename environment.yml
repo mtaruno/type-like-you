@@ -1,4 +1,4 @@
-# This file may be used to create an environment using:
-# $ conda create --name <env> --file <this file>
-# platform: osx-64
-@EXPLICIT
+name: talklikeyou
+channels:
+  - defaults
+prefix: /Users/matthewtaruno/opt/anaconda3/envs/talklikeyou
