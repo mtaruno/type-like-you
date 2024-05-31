@@ -1,8 +1,8 @@
-import { TextBar, Message } from ".";
+import { TextBar, Message } from "../components";
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 
-const ChatUI = () => {
+const ChatUI = ({ profilePic }) => {
     const [message, setMessage] = useState("");
     const [conversation, setConversation] = useState([]);
     const [isStart, setIsStart] = useState(true);
@@ -50,23 +50,31 @@ const ChatUI = () => {
     }, [conversation]);
 
     return (
-        <div className="flex flex-col justify-center items-center h-full">
-            <div className="h-3/4 w-1/3 bg-gray-200 border flex justify-center mb-2 rounded-xl">
-                <div className="w-full p-5 overflow-y-auto hide-scrollbar">
-                    {conversation.map((message, idx) => (
-                        <Message key={idx} message={message} />
-                    ))}
-                    {conversation.length === 0 && (
-                        <span className="text-center">Start Chatting...</span>
-                    )}
-                    <div ref={messagesEndRef} />
+        <div className="w-screen h-screen bg-gray-400 justify-center items-center">
+            <div className="flex flex-col justify-center items-center h-full">
+                <div className="h-3/4 w-1/3 bg-gray-200 border flex justify-center mb-2 rounded-xl">
+                    <div className="w-full p-5 overflow-y-auto hide-scrollbar">
+                        {conversation.map((message, idx) => (
+                            <Message
+                                key={idx}
+                                message={message}
+                                profilePic={profilePic}
+                            />
+                        ))}
+                        {conversation.length === 0 && (
+                            <span className="text-center">
+                                Start Chatting...
+                            </span>
+                        )}
+                        <div ref={messagesEndRef} />
+                    </div>
                 </div>
+                <TextBar
+                    message={message}
+                    setMessage={setMessage}
+                    sendMessage={sendMessage}
+                />
             </div>
-            <TextBar
-                message={message}
-                setMessage={setMessage}
-                sendMessage={sendMessage}
-            />
         </div>
     );
 };

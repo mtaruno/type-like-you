@@ -41,7 +41,6 @@ def chat():
     user_message = data.get('message')
     start = data.get('start')
     ai_response = get_response(user_message, start)
-    start = False
     return jsonify({'reply': ai_response})
 
 @app.route('/')
