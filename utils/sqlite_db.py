@@ -1,54 +1,44 @@
 import sqlite3
-from datetime import datetime
+from utils.parse import get_all_message_objects
+import re
 
 # Example chat objects
-chats = [
-    {'role': 'system', 'content': "Yo what's up bro?"},
-    {'role': 'user', 'content': "remember last time we talked about airplanes, tell me how those work"}
-]
+# chats = [
+#     {'role': 'system', 'content': "Yo what's up bro?"},
+#     {'role': 'user', 'content': "remember last time we talked about airplanes, tell me how those work"}
+# ]
 
+# Function to validate table name
+def validate_table_name(table_name):
+    if re.match(r'^[a-zA-Z_][a-zA-Z0-9_]*$', table_name):
+        return True
+    else:
+        raise ValueError("Invalid table name")
+    
 
-# Function to insert a chat message into the database
-def insert_chat(sender, content):
-    cursor.execute('''
-        INSERT INTO chats (sender, content) VALUES (?, ?)
-    ''', (sender, content))
-    conn.commit()
+def insert_chats(user_id, person_path):
+    chats = get_all_message_objects(person_path)
 
-
-def create_table():
-
-    # Create a table to store chat messages
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS chats (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            sender TEXT NOT NULL,
-            content TEXT NOT NULL,
-            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
-        )
-    ''')
-
-    # Commit the changes and close the connection
-    conn.commit()
-
-
-def insert_chats():
     # Insert chat objects into the database
     for chat in chats:
-        insert_chat(chat['role'], chat['content'])
+        insert_chat(user_id, chat['date'], chat['time'], chat['name'], chat['message'])
 
+# Function to insert a chat message into the database
+def insert_chat(user_id, date, time, name, message):
+    cursor.execute('''
+    INSERT INTO conversations (user_id, date, time, name, message) VALUES (?, ?, ?, ?, ?)
+    ''', (user_id, date, time, name, message))
+    conn.commit()
 
-def show_chat_db():
+def show_table(table_name):
     # Execute a query to select all rows from the chats table
-    cursor.execute('SELECT * FROM chats')
+    cursor.execute(f'SELECT * FROM {table_name}')
 
     # Fetch all rows from the executed query
     rows = cursor.fetchall()
 
-    # Print the fetched rows
     for row in rows:
         print(row)
-
 
 def show_tables():
     # Execute a query to select all table names
@@ -61,22 +51,62 @@ def show_tables():
     for table in tables:
         print(table[0])
 
+def delete_table(table_name):
+    if validate_table_name(table_name):
+        cursor.execute(f'DROP TABLE IF EXISTS {table_name}')
+        print(f"Table '{table_name}' deleted successfully.")
 
-def create_db(db_name: str):
+def initialize_database_tables():
     # Connect to SQLite database (creates the database if it doesn't exist)
-    conn = sqlite3.connect(db_name)
-    # Create a cursor object
-    cursor = conn.cursor()
+    # conn = sqlite3.connect(f'/Users/matthewtaruno/Library/Mobile Documents/com~apple~CloudDocs/Dev/type-like-you/data/db/chat.db')
+    # cursor = conn.cursor()
 
-    return conn, cursor
+    # Create table for chunked conversations metadata
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS whatsapp_history (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        whatsapp_name TEXT NOT NULL,
+        date TEXT,
+        time TEXT,
+        name TEXT,
+        message TEXT
+    )
+    ''')
 
 
+    # Create table for saving on-going conversation history
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS session_history (
+        session_id TEXT PRIMARY KEY,
+        message TEXT,
+    );
+    ''')
+
+
+    cursor.execute("""
+      CREATE TABLE IF NOT EXISTS profiles (
+        session_id TEXT PRIMARY KEY,
+        message TEXT, 
+    );                       
+    """)
+    # conn.commit()
+    # conn.close()
+
+# comment out as needed, it is an executable environment
 if __name__ == "__main__":
 
-    conn, cursor = create_db('/Users/matthewtaruno/Library/Mobile Documents/com~apple~CloudDocs/Dev/type-like-you/data/db/chat.db')
+    whatsapp_name = "Bryan Widjaja"
 
-    # Insert function commands here
-    show_chat_db()
+    conn = sqlite3.connect('/Users/matthewtaruno/Library/Mobile Documents/com~apple~CloudDocs/Dev/type-like-you/data/db/chat.db')
+    cursor = conn.cursor()
 
-    # Close the connection
+    delete_table('conversations')
+    initialize_database_tables()  
+    
+    insert_chats(whatsapp_name, "/Users/matthewtaruno/Library/Mobile Documents/com~apple~CloudDocs/Dev/type-like-you/data/bryan.txt")
+
+    show_tables()
+    show_table('conversations')
+    show_table('session_conversations')
+
     conn.close()

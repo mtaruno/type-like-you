@@ -1,19 +1,6 @@
 import re
+from typing import List
 
-def get_conversation(lines, person_path, entire_conversation = False):
-
-    parsed_data = read_and_format(person_path)
-
-    # filtering to just the person's messages: don't think this is needed, model needs more context
-    # parsed_data = [entry for entry in parsed_data if entry["name"] == 'Bryan Widjaja']
-
-    if entire_conversation == True: 
-        return base_complete_retriever(parsed_data, lines = len(parsed_data))
-        
-
-    conversation = base_retriever(parsed_data, lines) 
-
-    return "\n".join(conversation)
 
 def read_and_format(person_path):
     # start with whatsapp dataset
@@ -37,28 +24,29 @@ def read_and_format(person_path):
             }
             parsed_data.append(entry)
 
+    # CLEANING 
+    # removing the data if the message entry of the JSON object contains the U+200E character
+    parsed_data = [entry for entry in parsed_data if '\u200e' not in entry["message"]]
+    
     return parsed_data
 
-def clean(data: list[str])-> list[str]:
-    conversation = []
-    for message in conversation: 
-        pass
+def get_messages(person_path: str, lines) -> List[str]:
+    parsed_data = read_and_format(person_path)
 
-
-def base_retriever(data: list[str], lines) -> list[str]:
     conversation=[]
     # get N lines from the conversation
-    for entry in data[:lines]:
+    for entry in parsed_data[:lines]:
         conversation.append(f"{entry['name']}: {entry['message']}")
     return conversation
 
-def base_complete_retriever(data: list[str], lines) -> list[str]:
+def get_all_message_objects(person_path: str) -> List[str]:
+    parsed_data = read_and_format(person_path)
     conversation=[]
-    # get N lines from the conversation
-    for entry in data[:lines]:
+    for entry in parsed_data:
         conversation.append(entry)
     return conversation
 
-def representative_retriever(data: list[str]) -> list[str]:
+# TODO: This may be where I start to work with FAISS vector search functions
+def representative_retriever(data: List[str]) -> List[str]:
     conversation = []
     return conversation

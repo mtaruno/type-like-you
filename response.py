@@ -1,13 +1,22 @@
-from utils.parse import get_conversation
-from utils.api import query_gpt4
+from utils.parse import get_messages
+from inference.api import query_gpt4
 import argparse
+import yaml
 
 
-def get_history():
-    pass
+def get_yaml(file_path : str) -> dict:
+    with open(file_path, "r") as f:
+        prompts = yaml.safe_load(f)
+
+    print(prompts[''])
+
+
+    return prompts
+
+
+
 
 def get_response(user_message : str, start : bool) -> str:
-    # messages = get_history
     messages = []
 
     if start:
@@ -25,7 +34,7 @@ def initialize_conversation(person_path = "data/bryan.txt", person_name = "Bryan
         prompt = f.read()
     
     # get conversation to add to prompt
-    conversation = get_conversation(person_path = person_path, lines=50)
+    conversation = get_messages(person_path = person_path, lines=50)
     formatted_prompt = prompt.format(conversation=conversation, person = person_name)
     print(formatted_prompt)
 
@@ -33,8 +42,6 @@ def initialize_conversation(person_path = "data/bryan.txt", person_name = "Bryan
     
     sys_obj ={"role": "system",
                     "content": formatted_prompt}
-    
-    print(sys_obj)    
 
     return sys_obj
 
