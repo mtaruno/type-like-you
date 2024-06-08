@@ -1,12 +1,31 @@
 import "./App.css";
 import "./tailwind.css";
-import { ChatUI } from "./components";
+import { Home, ChatUI } from "./pages";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useState } from "react";
 
 function App() {
+    const [profilePic, setProfilePic] = useState(null);
+
     return (
-        <div className="w-screen h-screen bg-gray-500 justify-center items-center">
-            <ChatUI />
-        </div>
+        <BrowserRouter>
+            <Routes>
+                <Route
+                    path="/"
+                    exact
+                    element={
+                        <Home
+                            profilePic={profilePic}
+                            setProfilePic={setProfilePic}
+                        />
+                    }
+                />
+                <Route
+                    path="/chat"
+                    element={<ChatUI profilePic={profilePic} />}
+                />
+            </Routes>
+        </BrowserRouter>
     );
 }
 
