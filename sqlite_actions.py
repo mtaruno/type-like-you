@@ -1,7 +1,5 @@
 from utils.sqlite_db import *
-
-
-
+from utils.summaries import sentenceLengthDistribution, wordCountDistribution, wordFrequencyDistribution, wordLengthDistribution
 
 
 def insert_whatsapp_db(whatsapp_name): 
@@ -17,7 +15,15 @@ def insert_whatsapp_db(whatsapp_name):
     conn.close()
 
 def insert_profiles(whatsapp_name):
+    pass
+
+
+def get_profile(whatsapp_name):
+    profile = {}
+
     
+
+    return profile
 
 
 

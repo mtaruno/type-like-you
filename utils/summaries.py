@@ -7,6 +7,26 @@ import re
 from collections import Counter
 import emoji
 
+
+
+def countMessages(cursor, whatsapp_name):
+    '''
+    Returns the number of messages in a conversation history.
+    
+    Args:
+        cursor (sqlite3.Cursor): SQLite cursor object.
+        user_id (str): User ID of the messages to analyze.
+    
+    Returns:
+        int: Number of total messages in the conversation history.
+    '''
+
+    cursor.execute('''
+        SELECT COUNT(*) FROM whatsapp_history WHERE whatsapp_name = ?
+    ''', (whatsapp_name))
+    
+    return cursor.fetchone()[0]
+
 def topNTokens(cursor, whatsapp_name, n):
     '''
     Returns the top n tokens in a conversation history.
@@ -20,7 +40,7 @@ def topNTokens(cursor, whatsapp_name, n):
         List[Tuple[str, int]]: List of tuples containing the top n tokens and their counts.
     '''
     cursor.execute('''
-        SELECT message FROM conversations WHERE whatsapp_name = ?
+        SELECT message FROM whatsapp_history WHERE whatsapp_name = ?
     ''', (whatsapp_name))
     
     messages = cursor.fetchall()
@@ -34,6 +54,7 @@ def topNTokens(cursor, whatsapp_name, n):
     top_tokens = token_counts.most_common(n)
     
     return top_tokens
+
 def topEmojiDistribution(cursor, imitated_person_name, user_id):
     '''
     Returns the top emoji distribution in a conversation history in string format.
@@ -47,7 +68,7 @@ def topEmojiDistribution(cursor, imitated_person_name, user_id):
     '''
 
     cursor.execute('''
-        SELECT message FROM conversations WHERE whatsapp_name = ? 
+        SELECT message FROM whatsapp_history WHERE whatsapp_name = ? 
     ''', (whatsapp_name))
     
     messages = cursor.fetchall()
@@ -61,7 +82,7 @@ def topEmojiDistribution(cursor, imitated_person_name, user_id):
     
     return ', '.join([f'{emj}: {count}' for emj, count in top_emojis])
 
-def sentenceLengthDistribution(cursor, imitated_person_name, user_id):
+def sentenceLengthDistribution(cursor, whatsapp_name, user_id):
     """
     Returns the sentence length distribution in a conversation history in string format.
     
@@ -73,8 +94,8 @@ def sentenceLengthDistribution(cursor, imitated_person_name, user_id):
         str: String representation of the sentence length distribution.
     """
     cursor.execute('''
-        SELECT message FROM conversations WHERE user_id = ? AND name = ?
-    ''', (user_id, imitated_person_name))
+        SELECT message FROM whatsapp_history WHERE whatsapp_name = ?
+    ''', (whatsapp_name))
     
     messages = cursor.fetchall()
     sentence_lengths = []
@@ -88,6 +109,11 @@ def sentenceLengthDistribution(cursor, imitated_person_name, user_id):
     
     return ', '.join([f'{length} words: {count}' for length, count in length_distribution])
 
+def sample_conversation(whatsapp_name: str, message_count: int):
+    """
+    Retrieve sample messages (amount specified by message_count) from the conversation history of the user.database of the user. 
+    """
+    pass
 
 # Language Switching
 def languageTokensFrequency(user_id):

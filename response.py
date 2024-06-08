@@ -1,8 +1,6 @@
-from utils.parse import get_messages
 from inference.api import query_gpt4
 import argparse
 import yaml
-
 
 def get_yaml(file_path : str) -> dict:
     with open(file_path, "r") as f:
@@ -16,25 +14,31 @@ def get_yaml(file_path : str) -> dict:
 
 
 
-def get_response(user_message : str, start : bool) -> str:
+def get_response(user_message : str) -> str:
     messages = []
 
-    if start:
-        messages.append(initialize_conversation("data/bryan.txt"))
+    messages.append(initialize_conversation())
 
     # add user content
     messages.append(user_message)
     
     return query_gpt4(messages=messages, model="gpt-4o", max_tokens=1000).content
 
-def initialize_conversation(person_path = "data/bryan.txt", person_name = "Bryan"):
-    ''' Gives the first sys response which is the prompt'''
+
+def initialize_conversation():
+    '''Provide the LLM with the system prompt'''
    # get prompt
     with open("prompts/imitate.txt", "r") as f:
         prompt = f.read()
     
     # get conversation to add to prompt
-    conversation = get_messages(person_path = person_path, lines=50)
+    # conversation = get_messages(person_path = person_path, lines=50)
+        
+
+
+    # get all profile variables
+    profile = get_profile()    
+    
     formatted_prompt = prompt.format(conversation=conversation, person = person_name)
     print(formatted_prompt)
 
