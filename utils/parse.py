@@ -8,7 +8,7 @@ def get_conversation(lines, person_path, entire_conversation = False):
     # parsed_data = [entry for entry in parsed_data if entry["name"] == 'Bryan Widjaja']
 
     if entire_conversation == True: 
-        return base_retriever(parsed_data, lines = len(parsed_data))
+        return base_complete_retriever(parsed_data, lines = len(parsed_data))
         
 
     conversation = base_retriever(parsed_data, lines) 
@@ -39,11 +39,24 @@ def read_and_format(person_path):
 
     return parsed_data
 
+def clean(data: list[str])-> list[str]:
+    conversation = []
+    for message in conversation: 
+        pass
+
+
 def base_retriever(data: list[str], lines) -> list[str]:
     conversation=[]
     # get N lines from the conversation
     for entry in data[:lines]:
         conversation.append(f"{entry['name']}: {entry['message']}")
+    return conversation
+
+def base_complete_retriever(data: list[str], lines) -> list[str]:
+    conversation=[]
+    # get N lines from the conversation
+    for entry in data[:lines]:
+        conversation.append(entry)
     return conversation
 
 def representative_retriever(data: list[str]) -> list[str]:

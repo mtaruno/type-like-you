@@ -8,8 +8,15 @@ def topNTokens(conversation_history):
     '''
     return conversation_history.most_common(n=10)
 
-def topEmojiDistribution():
+def topEmojiDistribution(conversation_history):
     '''
     Returns the top emoji distribution in a conversation history in string format.
-    '''`
-    
+    '''
+    pass 
+
+
+def sentenceLengthDistribution(conversation_history):
+    """
+    Returns the sentence length distribution in a conversation history in string format.
+    """
+    pass

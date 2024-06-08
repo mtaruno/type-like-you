@@ -6,7 +6,6 @@ import argparse
 def get_history():
     pass
 
-
 def get_response(user_message : str, start : bool) -> str:
     # messages = get_history
     messages = []

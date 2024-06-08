@@ -2,22 +2,13 @@ from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from response import get_response, get_history
 import sqlite3
-import faiss
-import numpy as np
-from transformers import AutoTokenizer, AutoModel
-import torch
 
+app = Flask(__name__, static_folder='static')
 
-# Load model and tokenizer for embeddings
-tokenizer = AutoTokenizer.from_pretrained('sentence-transformers/all-MiniLM-L6-v2')
-model = AutoModel.from_pretrained('sentence-transformers/all-MiniLM-L6-v2')
+# Configure CORS
+CORS(app, resources={r"/chat": {"origins": "http://localhost:3000"}})
 
-def get_embedding(text):
-    inputs = tokenizer(text, return_tensors='pt', truncation=True, padding=True)
-    with torch.no_grad():
-        embeddings = model(**inputs).last_hidden_state.mean(dim=1)
-    return embeddings.numpy()
-
+# Database query function
 def query_db(query, args=(), one=False):
     conn = sqlite3.connect('chat_history.db')
     cursor = conn.cursor()
@@ -27,16 +18,16 @@ def query_db(query, args=(), one=False):
     conn.close()
     return (rv[0] if rv else None) if one else rv
 
-# Initialize FAISS index
-index = faiss.IndexFlatL2(384)  # Assuming embedding size is 384
-vector_db = {}
-
-
-app = Flask(__name__, static_folder='static')
-CORS(app)
-
-@app.route('/chat', methods=['POST'])
+# Chat endpoint
+@app.route('/chat', methods=['POST', 'OPTIONS'])
 def chat():
+    if request.method == 'OPTIONS':
+        response = jsonify({'status': 'ok'})
+        response.headers.add("Access-Control-Allow-Origin", "http://localhost:3000")
+        response.headers.add("Access-Control-Allow-Headers", "Content-Type, Authorization")
+        response.headers.add("Access-Control-Allow-Methods", "POST, OPTIONS")
+        return response
+    
     data = request.get_json()
     user_message = data.get('message')
     start = data.get('start')
@@ -44,25 +35,23 @@ def chat():
     start = False
     return jsonify({'reply': ai_response})
 
+# Serve index.html
 @app.route('/')
 def serve_index():
     return send_from_directory(app.static_folder, 'index.html')
 
+# Serve static files
 @app.route('/<path:path>')
 def serve_static(path):
     return send_from_directory(app.static_folder, path)
 
-
+# Retrieve endpoint
 @app.route('/retrieve', methods=['POST'])
 def retrieve():
     data = request.json
     user_message = data['message']
     user_embedding = get_embedding(user_message)
-    
-    D, I = index.search(user_embedding, 1)
-    closest_date = list(vector_db.keys())[I[0][0]]
-    
     return jsonify(vector_db[closest_date])
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(port=5000, debug=True)

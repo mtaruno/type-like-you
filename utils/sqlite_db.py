@@ -62,12 +62,18 @@ def show_tables():
         print(table[0])
 
 
-if __name__ == "__main__":
+def create_db(db_name: str):
     # Connect to SQLite database (creates the database if it doesn't exist)
-    conn = sqlite3.connect('chat.db')
-
+    conn = sqlite3.connect(db_name)
     # Create a cursor object
     cursor = conn.cursor()
+
+    return conn, cursor
+
+
+if __name__ == "__main__":
+
+    conn, cursor = create_db('/Users/matthewtaruno/Library/Mobile Documents/com~apple~CloudDocs/Dev/type-like-you/data/db/chat.db')
 
     # Insert function commands here
     show_chat_db()
