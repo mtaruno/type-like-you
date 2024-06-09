@@ -6,6 +6,7 @@ import {
 
 import Sidebar from "@/components/sidebar";
 import Chat from "@/components/chat";
+import ChatInput from "@/components/chat-input";
 
 export default function Home() {
   return (
@@ -13,13 +14,28 @@ export default function Home() {
       direction="horizontal"
       className="w-screen h-screen rounded-lg border"
     >
-      <ResizablePanel defaultSize={25}>
+      <ResizablePanel minSize={15} defaultSize={25}>
         <Sidebar />
       </ResizablePanel>
       <ResizableHandle withHandle />
-      <ResizablePanel defaultSize={75}>
-        <Chat />
+      <ResizablePanel className="h-screen" defaultSize={75}>
+
+        <ResizablePanelGroup
+          direction="vertical"
+          className="h-screen"
+        >
+
+          <ResizablePanel defaultSize={75}>
+            <Chat />
+          </ResizablePanel >
+          <ResizableHandle />
+
+          <ResizablePanel >
+            <ChatInput />
+          </ResizablePanel >
+
+        </ResizablePanelGroup>
       </ResizablePanel>
-    </ResizablePanelGroup>
+    </ResizablePanelGroup >
   )
 }
