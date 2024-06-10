@@ -27,15 +27,18 @@ def format_data(whatsapp_history: str):
             parsed_data.append(entry)
 
     # CLEANING 
-    # removing the data if the message entry of the JSON object contains the U+200E character
-    parsed_data = [entry for entry in parsed_data if '\u200e' not in entry["message"]]
+    # removing the data if the message entry of the JSON object contains the U+200E character or contains external content
+    parsed_data = [entry for entry in parsed_data if '\u200e' not in entry["message"] or contains_external_content(entry["message"])]
     
     return parsed_data
 
-def txt_to_json(person_path):
+def contains_external_content(message):
+    return bool(re.search(r'http[s]?://|www\.', message))
+
+def txt_to_json(whatsapp_name,person_path):
     # stores the txt file into a json file
     history = read_file(person_path)
-    data = {
+    data = { "whatsapp_name": whatsapp_name,
         "whatsapp_history": history
     }
     json_path = f"{person_path}.json"
@@ -43,7 +46,6 @@ def txt_to_json(person_path):
         json.dump(data, f, indent=4)
 
     print(f"Data has been written to {json_path}")
-    
     
 
 def get_messages(person_path: str, lines) -> List[str]:
@@ -69,5 +71,6 @@ def representative_retriever(data: List[str]) -> List[str]:
 
 
 if __name__ == "__main__":
-    # txt_to_json("data/darlin.txt")
-    print(set([i["name"] for i in get_all_message_objects("data/darlin.txt")]))
+    whatsapp_name = "Eggy Alicloud"
+    txt_to_json(whatsapp_name, "data/eggy.txt")
+    # print(set([i["name"] for i in get_all_message_objects("data/darlin.txt")]))

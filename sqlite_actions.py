@@ -20,7 +20,7 @@ def convert_to_valid_table_name(name):
     return name
 
 
-def insert_whatsapp_history_and_update_profile(whatsapp_name, whatsapp_history_path, emoji_examples_limit, topn_words_limit): 
+def insert_whatsapp_history_and_update_profile(whatsapp_name, whatsapp_history, emoji_examples_limit, topn_words_limit, user_slang_dictionary): 
     """
     whatsapp_history: the OG whatsapp text file formatted as a string
     """
@@ -32,12 +32,12 @@ def insert_whatsapp_history_and_update_profile(whatsapp_name, whatsapp_history_p
 
     initialize_database_tables()  
     
-    insert_chats(whatsapp_name, whatsapp_history_path)   
-    insert_profiles(whatsapp_name,emoji_examples_limit, topn_words_limit) # Update the user profile
+    insert_chats(whatsapp_name, whatsapp_history)   
+    insert_profiles(whatsapp_name,emoji_examples_limit, topn_words_limit, user_slang_dictionary) # Update the user profile
 
 
 
-def insert_profiles(whatsapp_name, emoji_examples_limit, topn_words_limit):
+def insert_profiles(whatsapp_name, emoji_examples_limit, topn_words_limit, user_slang_dictionary):
     conn = sqlite3.connect('/Users/matthewtaruno/Library/Mobile Documents/com~apple~CloudDocs/Dev/type-like-you/data/db/chat.db')
     cursor = conn.cursor()
 
@@ -63,8 +63,8 @@ def insert_profiles(whatsapp_name, emoji_examples_limit, topn_words_limit):
         token_distribution = topNTokens(cursor, whatsapp_name, topn_words_limit)
         emoji_distribution = topEmojiDistribution(cursor, whatsapp_name)
         message_count = countMessages(cursor, whatsapp_name)
-        user_slang_dictionary = None
         emoji_messages_examples = emojiMessagesExamples(cursor, whatsapp_name, emoji_examples_limit)
+        # user_slang_dictionary is defined in this function paramater
         
         # Inserting these profiles into the profiles table
         cursor.execute('''
@@ -144,10 +144,34 @@ def store_session_message_and_response(whatsapp_name, session_id, message, respo
     cursor.close()
     conn.close()
 
+
+def get_session_history(whatsapp_name, session_id):
+
+    conn = sqlite3.connect('/Users/matthewtaruno/Library/Mobile Documents/com~apple~CloudDocs/Dev/type-like-you/data/db/chat.db')
+    cursor = conn.cursor()
+    
+    cursor.execute('''
+        SELECT message, speaker FROM session_history
+        WHERE whatsapp_name = ? AND session_id = ?
+    ''', (whatsapp_name, session_id))
+    
+    rows = cursor.fetchall()
+    
+    return rows
+
+def format_for_gpt():
+    ''' Returns a list of dictionaries in GPT API friendly format'''
+    history_obj = []
+
+    return history_obj
+    
+
+
 if __name__ == "__main__":
     # insert_profiles("Bryan Widjaja")
-    
-    profile = get_profile("Bryan Widjaja")
-
-    for k, v in profile.items():
-        print(f"{k}: {v}")
+    # profile = get_profile("Bryan Widjaja")
+    # for k, v in profile.items():
+    #     print(f"{k}: {v}")
+    whatsapp_name = "Darlin"
+    session_id = 1
+    print(get_session_history(whatsapp_name, session_id))
