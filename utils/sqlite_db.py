@@ -15,21 +15,65 @@ def validate_table_name(table_name):
     else:
         raise ValueError("Invalid table name")
     
-def insert_chats(user_id, table_name, person_path):
-    chats = get_all_message_objects(person_path)
+
+
+def delete_existing_chats(whatsapp_name):
+    conn = sqlite3.connect('/Users/matthewtaruno/Library/Mobile Documents/com~apple~CloudDocs/Dev/type-like-you/data/db/chat.db')
+    cursor = conn.cursor()
+    # Check if whatsapp_name already exists in whatsapp_history and removes entries if it does
+    cursor.execute('''
+    DELETE FROM whatsapp_history WHERE whatsapp_name=?;
+    ''', (whatsapp_name,))
+
+    print(f"Chats with whatsapp name {whatsapp_name} deleted from database.")
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+
+
+def delete_existing_profile(whatsapp_name):
+    conn = sqlite3.connect('/Users/matthewtaruno/Library/Mobile Documents/com~apple~CloudDocs/Dev/type-like-you/data/db/chat.db')
+    cursor = conn.cursor()
+
+    cursor.execute('''
+    DELETE FROM profiles WHERE whatsapp_name=?;
+    ''', (whatsapp_name,))
+
+    conn.commit()
+
+    print(f"{whatsapp_name} profile deleted from database.")
+
+
+    cursor.close()
+    conn.close()
+
+def insert_chats(whatsapp_name, whatsapp_history_path):
+    chats = get_all_message_objects(whatsapp_history_path)
+
+    conn = sqlite3.connect(f'/Users/matthewtaruno/Library/Mobile Documents/com~apple~CloudDocs/Dev/type-like-you/data/db/chat.db')
+    cursor = conn.cursor()
+
+    # Delete existing chats 
+    delete_existing_chats(whatsapp_name)
 
     # Insert chat objects into the database
     for chat in chats:
-        insert_chat(user_id, chat['date'], chat['time'], chat['name'], chat['message'], table_name)
+        insert_chat(conn, cursor, whatsapp_name, chat['date'], chat['time'], chat['name'], chat['message'])
+
+    print(f"{len(chats)} {whatsapp_name} chats inserted into database.")
+    cursor.close()
+    conn.close()
+    
 
 # Function to insert a chat message into the database
-def insert_chat(user_id, date, time, name, message, table_name):
-    cursor.execute('''
-    INSERT INTO conversations (user_id, date, time, name, message) VALUES (?, ?, ?, ?, ?)
-    ''', (user_id, date, time, name, message, table_name))
+def insert_chat(conn, cursor, whatsapp_name, date, time, name, message):
+    cursor.execute(f'''
+    INSERT INTO whatsapp_history (whatsapp_name, date, time, name, message) VALUES (?, ?, ?, ?, ?)
+    ''', (whatsapp_name, date, time, name, message))
     conn.commit()
 
-def show_table(table_name):
+def show_table(cursor, table_name):
     # Execute a query to select all rows from the chats table
     cursor.execute(f'SELECT * FROM {table_name}')
 
@@ -39,7 +83,7 @@ def show_table(table_name):
     for row in rows:
         print(row)
 
-def show_tables():
+def show_tables(cursor):
     # Execute a query to select all table names
     cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
 
@@ -57,8 +101,8 @@ def delete_table(table_name):
 
 def initialize_database_tables():
     # Connect to SQLite database (creates the database if it doesn't exist)
-    # conn = sqlite3.connect(f'/Users/matthewtaruno/Library/Mobile Documents/com~apple~CloudDocs/Dev/type-like-you/data/db/chat.db')
-    # cursor = conn.cursor()
+    conn = sqlite3.connect(f'/Users/matthewtaruno/Library/Mobile Documents/com~apple~CloudDocs/Dev/type-like-you/data/db/chat.db')
+    cursor = conn.cursor()
 
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS whatsapp_history (
@@ -73,39 +117,44 @@ def initialize_database_tables():
     
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS session_history (
-        session_id TEXT PRIMARY KEY,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        whatsapp_name TEXT,
+        session_id TEXT,
         message TEXT,
+        speaker INT
     );
     ''')
 
     cursor.execute("""
       CREATE TABLE IF NOT EXISTS profiles (
-        session_id TEXT PRIMARY KEY,
-        message TEXT, 
+        whatsapp_name TEXT PRIMARY KEY,
+        message_count INT,
         sentence_distribution TEXT,
         token_distribution TEXT,
         user_slang_dictionary TEXT,
         emoji_distribution TEXT,
+        emoji_messages_examples TEXT
     );                       
     """)
-    # conn.commit()
-    # conn.close()
+    conn.commit()
+    conn.close()
 
 # comment out as needed, it is an executable environment
 if __name__ == "__main__":
 
-    whatsapp_name = "Bryan Widjaja"
+    whatsapp_name = "Valerie Suriato"
 
     conn = sqlite3.connect('/Users/matthewtaruno/Library/Mobile Documents/com~apple~CloudDocs/Dev/type-like-you/data/db/chat.db')
     cursor = conn.cursor()
 
-    # delete_table('session_conversations') 
-    initialize_database_tables()  
+    # delete_table('session_history') 
+    # initialize_database_tables()   
     
-    insert_chats(whatsapp_name, "whatsapp_history", "/Users/matthewtaruno/Library/Mobile Documents/com~apple~CloudDocs/Dev/type-like-you/data/bryan.txt")
+    # insert_chats(whatsapp_name, "whatsapp_history", "/Users/matthewtaruno/Library/Mobile Documents/com~apple~CloudDocs/Dev/type-like-you/data/bryan.txt")
 
-    show_tables()
-    show_table('whatsapp_history')
+    delete_existing_profile(whatsapp_name)
+    # show_tables(cursor)
+    # show_table('whatsapp_history')
     # show_table('session_conversations')
-
+    # show_table(cursor, 'session_history')
     conn.close()
