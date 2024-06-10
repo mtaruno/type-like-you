@@ -1,5 +1,3 @@
-
-
 with open("prompts/imitate.txt", "r") as f:
     prompt = f.read()
 
