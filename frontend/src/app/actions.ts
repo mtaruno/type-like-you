@@ -1,5 +1,5 @@
 // 'use server';
-import { History, RawHistory, Message, RawResponse, PostText, RawPostText } from '@/lib/schemas';
+import { History, RawHistory, Message, RawHistoryResponse, PostText, RawPostText } from '@/lib/schemas';
 
 const url = "http://127.0.0.1:3420";
 
@@ -12,7 +12,7 @@ function check(response: Response) {
 export async function fetchHistory(): Promise<History[]> {
   const response = await fetch(url + '/history');
   check(response);
-  const json = await response.json() as RawResponse;
+  const json = await response.json() as RawHistoryResponse;
   const objects: History[] = json["data"].map((history) => ({
     id: history["id"],
     username: history["username"],
@@ -46,7 +46,7 @@ export async function postText({ id, text }: PostText): Promise<History[]> {
   });
   check(response);
 
-  const json = await response.json() as RawResponse;
+  const json = await response.json() as RawHistoryResponse;
   const objects: History[] = json["data"].map((history) => ({
     id: history["id"],
     username: history["username"],

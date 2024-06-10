@@ -1,3 +1,4 @@
+// /history
 export interface History {
   id: number;
   username: string;
@@ -9,27 +10,18 @@ export interface Message {
   text: string;
 }
 
-export interface RawResponse {
-  data: RawHistory[];
-}
-
-export interface RawHistory {
-  id: number;
-  username: string;
-  messages: RawMessage[];
-}
-
-export interface RawMessage {
-  speaker: 0 | 1;
-  message: string;
-}
-
 export interface PostText {
   id: number;
   text: string;
 }
 
-export interface RawPostText {
-  id: number;
-  text: string;
+export interface UploadHistory {
+  whatsapp_name: string;
+  whatsapp_history: string;
+}
+
+export interface UploadChat {
+  session_id: number;
+  whatsapp_name: string;
+  message: string;
 }
