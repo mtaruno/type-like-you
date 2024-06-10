@@ -18,6 +18,8 @@ export interface PostText {
 export interface UploadHistory {
   whatsapp_name: string;
   whatsapp_history: string;
+  user_slang_dictionary: string;
+
 }
 
 export interface UploadChat {

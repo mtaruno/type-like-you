@@ -8,22 +8,20 @@ import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { toast } from "sonner"
 import { useState } from "react"
+import { useMutation } from "@tanstack/react-query"
+import { uploadHistory } from "@/app/actions"
 
 const formSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
+  slang: z.string().optional(),
   conversation: z.instanceof(File).refine((file) => file.size < 7000000, {
     message: 'Your file must be less than 7MB.',
   }),
@@ -31,10 +29,17 @@ const formSchema = z.object({
 });
 
 export function AddUserForm({ setOpen }: { setOpen: any }) {
+
+  const mutation = useMutation({
+    mutationFn: uploadHistory,
+    onSuccess: () => toast.success("Successfully uploaded data"),
+    onError: () => toast.error("An error occurred while uploading..."),
+  })
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
+      slang: "",
       conversation: undefined,
       other: undefined,
     },
@@ -42,11 +47,17 @@ export function AddUserForm({ setOpen }: { setOpen: any }) {
   const [names, setNames] = useState<string[] | null>(null);
 
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    const text = await values.conversation.text();
+    const data = {
+      whatsapp_name: values.other,
+      whatsapp_history: text,
+      user_slang_dictionary: values.slang ?? "",
+    };
+    console.log(data);
+    mutation.mutate(data)
     form.reset();
     setOpen(false);
-
-    toast("You submitted the following values:")
   }
 
   return (
@@ -54,12 +65,12 @@ export function AddUserForm({ setOpen }: { setOpen: any }) {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
-          name="username"
+          name="slang"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Username</FormLabel>
+              <FormLabel>User Slang Dictionary</FormLabel>
               <FormControl>
-                <Input placeholder="Tang Jie" {...field} />
+                <Input placeholder="E.g. Mashallah: An expression used to indicate something good" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -83,6 +94,7 @@ export function AddUserForm({ setOpen }: { setOpen: any }) {
                         .text()
                         .then((text: string) => {
                           try {
+                            //@ts-ignore
                             const names = [...new Set(text.match(/\] ([\w\s]+):/g).map(match => match.slice(2, -1)))];
                             setNames(names);
                           } catch {

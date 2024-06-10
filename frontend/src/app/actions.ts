@@ -1,5 +1,5 @@
 // 'use server';
-import { History, RawHistory, Message, RawHistoryResponse, PostText, RawPostText } from '@/lib/schemas';
+import { History, RawHistory, Message, RawHistoryResponse, PostText, RawPostText, UploadHistory } from '@/lib/schemas';
 
 const url = "http://127.0.0.1:3420";
 
@@ -32,6 +32,20 @@ export async function testFetch() {
   const json = await response.text();
   console.log(json);
   return json;
+}
+
+export async function uploadHistory(
+  data:
+    UploadHistory
+) {
+  const response = await fetch(url + '/upload', {
+    method: "POST",
+    body: JSON.stringify(data)
+
+  });
+  check(response);
+  const json = await response.json();
+  return json["message"];
 }
 
 
