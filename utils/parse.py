@@ -1,18 +1,20 @@
 import re
 from typing import List
+import json 
 
 
-def read_and_format(person_path):
-    # start with whatsapp dataset
+def read_file(person_path):
     with open(person_path, "r", encoding='utf-8') as f:
         data = f.read()
+    return data
 
+def format_data(whatsapp_history: str):
     # regex to parse data 
-    pattern = re.compile(r"\[(\d{2}/\d{2}/\d{2}), (\d{2}\.\d{2}\.\d{2})\] (\w+ \w+): (.+)")
-
+    # pattern = re.compile(r"\[(\d{2}/\d{2}/\d{2}), (\d{2}\.\d{2}\.\d{2})\] (\w+ \w+): (.+)")
+    pattern = re.compile(r"\[(\d{2}/\d{2}/\d{2}), (\d{2}\.\d{2}\.\d{2})\] ([^:]+): (.+)")
     # making into json list format
     parsed_data = []
-    for line in data.split("\n"):
+    for line in whatsapp_history.split("\n"):
         match = pattern.search(line)
         if match:
             date, time, name, message = match.groups()
@@ -30,8 +32,22 @@ def read_and_format(person_path):
     
     return parsed_data
 
+def txt_to_json(person_path):
+    # stores the txt file into a json file
+    history = read_file(person_path)
+    data = {
+        "whatsapp_history": history
+    }
+    json_path = f"{person_path}.json"
+    with open(json_path, "w") as f:
+        json.dump(data, f, indent=4)
+
+    print(f"Data has been written to {json_path}")
+    
+    
+
 def get_messages(person_path: str, lines) -> List[str]:
-    parsed_data = read_and_format(person_path)
+    parsed_data = format_data(read_file(person_path))
 
     conversation=[]
     # get N lines from the conversation
@@ -39,8 +55,8 @@ def get_messages(person_path: str, lines) -> List[str]:
         conversation.append(f"{entry['name']}: {entry['message']}")
     return conversation
 
-def get_all_message_objects(person_path: str) -> List[str]:
-    parsed_data = read_and_format(person_path)
+def get_all_message_objects(whatsapp_history_path: str) -> List[str]:
+    parsed_data = format_data(read_file(whatsapp_history_path))
     conversation=[]
     for entry in parsed_data:
         conversation.append(entry)
@@ -50,3 +66,8 @@ def get_all_message_objects(person_path: str) -> List[str]:
 def representative_retriever(data: List[str]) -> List[str]:
     conversation = []
     return conversation
+
+
+if __name__ == "__main__":
+    # txt_to_json("data/darlin.txt")
+    print(set([i["name"] for i in get_all_message_objects("data/darlin.txt")]))

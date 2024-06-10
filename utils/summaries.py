@@ -23,7 +23,7 @@ def countMessages(cursor, whatsapp_name):
 
     cursor.execute('''
         SELECT COUNT(*) FROM whatsapp_history WHERE whatsapp_name = ?
-    ''', (whatsapp_name))
+    ''', (whatsapp_name, ))
     
     return cursor.fetchone()[0]
 
@@ -40,8 +40,8 @@ def topNTokens(cursor, whatsapp_name, n):
         List[Tuple[str, int]]: List of tuples containing the top n tokens and their counts.
     '''
     cursor.execute('''
-        SELECT message FROM whatsapp_history WHERE whatsapp_name = ?
-    ''', (whatsapp_name))
+        SELECT message FROM whatsapp_history WHERE whatsapp_name = ? AND name = ?
+    ''', (whatsapp_name,whatsapp_name))
     
     messages = cursor.fetchall()
     all_tokens = []
@@ -53,9 +53,9 @@ def topNTokens(cursor, whatsapp_name, n):
     token_counts = Counter(all_tokens)
     top_tokens = token_counts.most_common(n)
     
-    return top_tokens
+    return '\n'.join([f'{token}: {count}' for token, count in top_tokens])
 
-def topEmojiDistribution(cursor, imitated_person_name, user_id):
+def topEmojiDistribution(cursor, whatsapp_name):
     '''
     Returns the top emoji distribution in a conversation history in string format.
     
@@ -68,8 +68,8 @@ def topEmojiDistribution(cursor, imitated_person_name, user_id):
     '''
 
     cursor.execute('''
-        SELECT message FROM whatsapp_history WHERE whatsapp_name = ? 
-    ''', (whatsapp_name))
+        SELECT message FROM whatsapp_history WHERE whatsapp_name = ? AND name = ?
+    ''', (whatsapp_name, whatsapp_name))
     
     messages = cursor.fetchall()
     all_emojis = []
@@ -82,7 +82,7 @@ def topEmojiDistribution(cursor, imitated_person_name, user_id):
     
     return ', '.join([f'{emj}: {count}' for emj, count in top_emojis])
 
-def sentenceLengthDistribution(cursor, whatsapp_name, user_id):
+def sentenceLengthDistribution(cursor, whatsapp_name):
     """
     Returns the sentence length distribution in a conversation history in string format.
     
@@ -95,7 +95,7 @@ def sentenceLengthDistribution(cursor, whatsapp_name, user_id):
     """
     cursor.execute('''
         SELECT message FROM whatsapp_history WHERE whatsapp_name = ?
-    ''', (whatsapp_name))
+    ''', (whatsapp_name, ))
     
     messages = cursor.fetchall()
     sentence_lengths = []
@@ -108,6 +108,42 @@ def sentenceLengthDistribution(cursor, whatsapp_name, user_id):
     length_distribution = sorted(length_counts.items())
     
     return ', '.join([f'{length} words: {count}' for length, count in length_distribution])
+
+
+
+def emojiMessagesExamples(cursor, whatsapp_name, n):
+    '''
+    Returns up to n messages containing emojis for a given WhatsApp name.
+    
+    Args:
+        cursor (sqlite3.Cursor): SQLite cursor object.
+        whatsapp_name (str): Name of the WhatsApp user to analyze.
+        n (int): Upper limit on the number of example messages to return.
+    
+    Returns:
+        List[str]: List of messages containing emojis.
+    '''
+    # Emoji pattern
+    emoji_pattern = re.compile(
+        "["
+        u"\U0001F600-\U0001F64F"  # emoticons
+        u"\U0001F300-\U0001F5FF"  # symbols & pictographs
+        u"\U0001F680-\U0001F6FF"  # transport & map symbols
+        u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
+        u"\U00002700-\U000027BF"  # Dingbats
+        u"\U000024C2-\U0001F251"  # Enclosed characters
+        "]+", flags=re.UNICODE
+    )
+    
+    cursor.execute('''
+        SELECT message FROM whatsapp_history WHERE whatsapp_name = ? AND name = ?
+    ''', (whatsapp_name, whatsapp_name))
+    
+    messages = cursor.fetchall()
+    emoji_messages = [message[0] for message in messages if emoji_pattern.search(message[0])]
+    
+    return '\n'.join(emoji_messages[:n])  # Return up to n messages
+
 
 def sample_conversation(whatsapp_name: str, message_count: int):
     """
@@ -134,10 +170,15 @@ if __name__ == "__main__":
     conn = sqlite3.connect("/Users/matthewtaruno/Library/Mobile Documents/com~apple~CloudDocs/Dev/type-like-you/data/db/chat.db")
     cursor = conn.cursor()
 
-    whatsapp_name= 'bwidjaja'
+    whatsapp_name= 'Bryan Widjaja'
 
     print(topNTokens(cursor, whatsapp_name, 30))
     print(topEmojiDistribution(cursor, whatsapp_name))
     print(sentenceLengthDistribution(cursor, whatsapp_name))
+    print(countMessages(cursor, whatsapp_name))
+    print(emojiMessagesExamples(cursor, whatsapp_name, 20))
+
+
+
     
     conn.close()
