@@ -20,7 +20,7 @@ export default function AddUser() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
 
-        <Button>
+        <Button >
           <Plus className="w-4 h-4" />
         </Button>
       </DialogTrigger>
