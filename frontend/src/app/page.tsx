@@ -1,3 +1,4 @@
+'use client';
 import {
   ResizableHandle,
   ResizablePanel,
@@ -7,8 +8,10 @@ import {
 import Sidebar from "@/components/sidebar";
 import Chat from "@/components/chat";
 import ChatInput from "@/components/chat-input";
+import { useChatStore } from "@/components/providers";
 
 export default function Home() {
+  const selected = useChatStore((state) => state.selected);
   return (
     <ResizablePanelGroup
       direction="horizontal"
@@ -30,9 +33,11 @@ export default function Home() {
           </ResizablePanel >
           <ResizableHandle />
 
-          <ResizablePanel >
-            <ChatInput />
-          </ResizablePanel >
+          {selected != -1 &&
+            <ResizablePanel >
+              <ChatInput />
+            </ResizablePanel >
+          }
 
         </ResizablePanelGroup>
       </ResizablePanel>

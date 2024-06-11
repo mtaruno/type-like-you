@@ -44,14 +44,15 @@ export default function ChatInput() {
     }
   }
 
-  return (
-    // <Textarea className="w-full h-24 caret-primary border-x-0 resize-none" autoFocus />
-    <Textarea
-      className="h-full text-lg"
-      value={text}
-      onKeyDown={handleKeyDown}
-      onChange={handleChange}
-      autoFocus
-    />
-  )
+  if (selected != -1)
+    return (
+      // <Textarea className="w-full h-24 caret-primary border-x-0 resize-none" autoFocus />
+      <Textarea
+        className="h-full text-lg"
+        value={text}
+        onKeyDown={handleKeyDown}
+        onChange={handleChange}
+        autoFocus
+      />
+    )
 }

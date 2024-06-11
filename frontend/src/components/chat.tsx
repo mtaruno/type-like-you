@@ -1,4 +1,5 @@
 'use client';
+import Image from "next/image";
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useQuery } from "@tanstack/react-query";
 import { fetchHistory } from "@/app/actions";
@@ -66,7 +67,8 @@ export default function Chat() {
       </ScrollArea>
     </div>;
   } else {
-    return <div className="h-screen flex justify-center items-center">
+    return <div className="h-screen flex justify-center items-center flex-col">
+      <Image src="/logo_transparent.png" alt="Chat" width={300} height={300} />
       <p className="text-xl">
         Select a Chat to get started.
       </p>
