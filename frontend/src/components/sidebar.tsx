@@ -29,13 +29,13 @@ export default function Sidebar() {
       </div>
 
       <div className="m-2 gap-x-2">
-        {data && searchFilter == "" && data.map(({ id, username }) => (
-          <ProfileCard name={username} key={id} id={id} />
+        {data && searchFilter == "" && data.map(({ username }, index) => (
+          <ProfileCard name={username} id={index} key={username} />
         ))}
 
         {/* With Search Filter */}
-        {fuseResults && fuseResults.map(({ item }) => (
-          <ProfileCard name={item.username} key={item.id} id={item.id} />
+        {fuseResults && fuseResults.map(({ item }, index) => (
+          <ProfileCard name={item.username} key={item.username} id={index} />
         ))}
       </div>
     </div>

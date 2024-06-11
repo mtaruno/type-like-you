@@ -15,7 +15,10 @@ export async function fetchHistory(): Promise<History[]> {
   const json = await response.json();
   const objects: History[] = json["data"].map((session: any) => ({
     username: session["whatsapp_name"],
-    messages: session["messages"],
+    messages: session["messages"].map(({ speaker, message }: any) => ({
+      text: message,
+      speaker,
+    })),
   }));
 
   return objects;

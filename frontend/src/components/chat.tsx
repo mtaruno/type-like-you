@@ -38,7 +38,7 @@ export default function Chat() {
   // TODO: Implement Scroll to bottom feature later
   const ref = useRef(null);
 
-  if (selected != "") {
+  if (selected != -1) {
     return <div className="h-full flex flex-col">
       <ScrollArea className="h-full">
         <div className="flex flex-col gap-y-2 mx-4">
