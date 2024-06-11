@@ -1,7 +1,5 @@
 
 export interface RawHistory {
-  id: number;
-  username: string;
   messages: RawMessage[];
 }
 
@@ -14,7 +12,3 @@ export interface RawMessage {
   message: string;
 }
 
-export interface RawPostText {
-  id: number;
-  text: string;
-}

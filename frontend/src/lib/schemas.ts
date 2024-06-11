@@ -1,6 +1,5 @@
 // /history
 export interface History {
-  id: number;
   username: string;
   messages: Message[];
 }
@@ -10,10 +9,6 @@ export interface Message {
   text: string;
 }
 
-export interface PostText {
-  id: number;
-  text: string;
-}
 
 export interface UploadHistory {
   whatsapp_name: string;
@@ -23,7 +18,14 @@ export interface UploadHistory {
 }
 
 export interface UploadChat {
-  session_id: number;
+  id: string;
+  text: string;
+}
+export interface RawUploadChat {
   whatsapp_name: string;
+  message: string;
+}
+
+export interface UploadChatResponse {
   message: string;
 }
