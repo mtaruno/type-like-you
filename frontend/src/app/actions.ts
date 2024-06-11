@@ -1,7 +1,7 @@
 // 'use server';
 import { History, UploadHistory, UploadChatResponse, UploadChat, RawUploadChat } from '@/lib/schemas';
 
-const url = "http://127.0.0.1:5000";
+const url = "http://127.0.0.1:3420";
 
 function check(response: Response) {
   if (!response.ok) {
@@ -62,7 +62,10 @@ export async function postText({ id, text }: UploadChat): Promise<UploadChatResp
   });
   check(response);
 
-  const json = await response.json() as UploadChatResponse;
-  return json;
+  const json = await response.json();
+  const object = {
+    message: json["ditto_message"]
+  }
+  return object;
 
 }

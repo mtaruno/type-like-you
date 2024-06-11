@@ -7,21 +7,41 @@ import { useChatStore } from "./providers";
 
 
 export default function ChatInput() {
-  const mutation = useMutation({ mutationFn: postText });
+  const mutation = useMutation({
+    mutationFn: postText,
+    onSuccess: ({ message }) => {
+
+      queryClient.setQueryData(["history"], (history: any) => {
+        const data = JSON.parse(JSON.stringify(history));
+        console.log(message)
+        data[selected].messages.push({ speaker: 1, text: message });
+        return data;
+      })
+    }
+  });
   const [text, setText] = useState("");
   const selected = useChatStore(state => state.selected);
   const { data: history } = useQuery({ queryKey: ["history"], queryFn: fetchHistory });
+  const queryClient = useQueryClient();
 
   function handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
     setText(e.target.value);
   }
   function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
-    console.log(e);
     if (e.key == "Enter") {
-      console.log("wow");
+      if (history) {
+        const data = { id: history[selected].username, text };
+        mutation.mutate(data)
+
+        queryClient.setQueryData(["history"], (history: any) => {
+          const data = JSON.parse(JSON.stringify(history));
+          data[selected].messages.push({ speaker: 0, text });
+          return data;
+        })
+      }
+
       setText("");
     }
-    if (history) mutation.mutate({ id: history[selected].username, text })
   }
 
   return (
