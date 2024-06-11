@@ -16,7 +16,6 @@ def upload():
     whatsapp_name = data.get('whatsapp_name')
     whatsapp_history = data.get('whatsapp_history')
     user_slang_dictionary = data.get('user_slang_dictionary')
-
     # Validate if required data is present
     if not whatsapp_name or not whatsapp_history:
         return jsonify({'error': 'Missing whatsapp_name or whatsapp_history'}), 400
@@ -26,6 +25,7 @@ def upload():
 
     # Save the chat history to the database and update profile 
     insert_whatsapp_history_and_update_profile(whatsapp_name, whatsapp_history, emoji_examples_limit, topn_words_limit, user_slang_dictionary)
+
 
     # Return a success message
     return jsonify({'message': 'Chat history and profile updated successfully'}), 200

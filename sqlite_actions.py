@@ -37,6 +37,7 @@ def insert_whatsapp_history_and_update_profile(whatsapp_name, whatsapp_history, 
 
 
 
+
 def insert_profiles(whatsapp_name, emoji_examples_limit, topn_words_limit, user_slang_dictionary):
     conn = sqlite3.connect('/Users/matthewtaruno/Library/Mobile Documents/com~apple~CloudDocs/Dev/type-like-you/data/db/chat.db')
     cursor = conn.cursor()
@@ -191,6 +192,18 @@ def get_history_for_endpoint():
         if whatsapp_name not in data:
             data[whatsapp_name] = {"whatsapp_name": whatsapp_name, "messages": []}
         data[whatsapp_name]["messages"].append({"speaker": speaker, "message": message})
+
+
+    # Fetch unique whatsapp_name entries from profiles table
+    cursor.execute("SELECT DISTINCT whatsapp_name FROM profiles")
+    profile_rows = cursor.fetchall()
+
+    # Add unique whatsapp_name entries to the data dictionary if not already present
+    for profile_row in profile_rows:
+        whatsapp_name = profile_row[0]
+        if whatsapp_name not in data:
+            data[whatsapp_name] = {"whatsapp_name": whatsapp_name, "messages": []}
+    
 
     # Convert the organized data into the final JSON structure
     json_output = {"data": list(data.values())}
