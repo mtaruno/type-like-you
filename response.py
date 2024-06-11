@@ -41,7 +41,7 @@ def initialize_conversation(whatsapp_name):
     # conversation = get_messages(person_path = person_path, lines=50)
 
     # get all profile variables
-    profile = get_profile(whatsapp_name)    
+    profile = get_profile(whatsapp_name)
     prompt = get_system_prompt()
 
     # adding it to the system prompt

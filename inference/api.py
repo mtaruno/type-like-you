@@ -26,6 +26,7 @@ def query_gpt4(messages, model=models["gpt-4"], max_tokens=100):
         max_tokens=max_tokens,
         stream = False
         )
+    print(response)
     return response.choices[0].message.content
 
 def get_yaml(file_path):

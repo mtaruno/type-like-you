@@ -10,8 +10,15 @@ def read_file(person_path):
 
 def format_data(whatsapp_history: str):
     # regex to parse data 
+    # pattern = re.compile(r"\[(\d{1,2}/\d{1,2}/\d{2,4}), (\d{1,2}:\d{2}:\d{2} (?:AM|PM))\] ([^:]+): (.+)") # metilda
     # pattern = re.compile(r"\[(\d{2}/\d{2}/\d{2}), (\d{2}\.\d{2}\.\d{2})\] (\w+ \w+): (.+)")
-    pattern = re.compile(r"\[(\d{2}/\d{2}/\d{2}), (\d{2}\.\d{2}\.\d{2})\] ([^:]+): (.+)")
+
+    pattern = re.compile(r"\[(\d{1,2}/\d{1,2}/\d{2,4}),\s+(\d{1,2}:\d{2})\s*-\s*([^:]+): (.+)") # gog
+
+    # pattern = re.compile(r"\[(\d{1,2}/\d{1,2}/\d{2,4}),\s+(\d{1,2}:\d{2}:\d{2}[\u202f\s]*(?:AM|PM))\] ([^:]+): (.+)")  # yaoming
+    # pattern = re.compile(r"\[(\d{2}/\d{2}/\d{2}), (\d{2}\.\d{2}\.\d{2})\] ([^:]+): (.+)") # matt
+
+
     # making into json list format
     parsed_data = []
     for line in whatsapp_history.split("\n"):
@@ -28,36 +35,9 @@ def format_data(whatsapp_history: str):
 
     # CLEANING 
     # removing the data if the message entry of the JSON object contains the U+200E character or contains external content
-    parsed_data = [entry for entry in parsed_data if '\u200e' not in entry["message"]] # or contains_external_content(entry["message"]
-    
+    parsed_data = [entry for entry in parsed_data if '\u200e' not in entry["message"] and 'omitted' not in entry["message"]] # or contains_external_content(entry["message"]
+    assert len(parsed_data) > 0 , "No data found in the file, please fix the WhatsApp parser"
     return parsed_data
-
-
-def format_chinese_data(whatsapp_history: str):
-    # Regex pattern to parse the chat data
-    pattern = re.compile(r"\[(\d{1,2}/\d{1,2}/\d{2,4}), (\d{1,2}:\d{2}:\d{2} (?:AM|PM))\] ([^:]+): (.+)")
-    
-    # Create a list to hold the parsed data
-    parsed_data = []
-    
-    for line in whatsapp_history.split("\n"):
-        match = pattern.match(line)
-        if match:
-            date, time, name, message = match.groups()
-            entry = {
-                "date": date,
-                "time": time,
-                "name": name,
-                "message": message
-            }
-            parsed_data.append(entry)
-    
-    # Remove entries with the U+200E character or containing omitted content
-    parsed_data = [entry for entry in parsed_data if '\u200e' not in entry["message"] and 'omitted' not in entry["message"]]
-    
-    return parsed_data
-
-
 
 
 # def txt_to_json(whatsapp_name, person_path):
@@ -135,6 +115,8 @@ def representative_retriever(data: List[str]) -> List[str]:
 
 
 if __name__ == "__main__":
-    whatsapp_name = "Mum"
-    txt_to_json(whatsapp_name, "data/mum.txt")
+    # whatsapp_name = "Mum"
+    # txt_to_json(whatsapp_name, "data/mum.txt")
     # print(set([i["name"] for i in get_all_message_objects("data/darlin.txt")]))
+    print(format_data(read_file("data/goga_stephen.txt")))
+

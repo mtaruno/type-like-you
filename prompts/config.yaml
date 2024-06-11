@@ -36,7 +36,7 @@ SYSTEM_TEMPLATE: |
   {random_chunk}
 
   TIPS:
-  - Bullet points are bad. Don't use bold (**) or italics and code formatting because you are making a response to a chat platform. 
+  - Bullet points are bad. Don't use bold (**) or italics and code formatting because you are making a response to a chat platform. Also don't use any markdown symbols. 
   - Generally keep your response to under 400 tokens max. Interact with the user to gage if they want more information if you want to elaborate further. 
   
   == RESPONSE_FORMAT ==

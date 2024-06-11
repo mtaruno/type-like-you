@@ -1,5 +1,5 @@
 import sqlite3
-from utils.parse import get_all_message_objects, format_data, format_chinese_data
+from utils.parse import get_all_message_objects, format_data
 import re
 
 # Example chat objects
@@ -37,6 +37,13 @@ def delete_user_history(whatsapp_name):
     ''', (whatsapp_name,))
 
     print(f"Session chats with whatsapp name {whatsapp_name} deleted from database.")
+
+    cursor.execute('''
+    DELETE FROM profiles WHERE whatsapp_name=?;
+    ''', (whatsapp_name,))
+
+    print(f"Profile entry with whatsapp name {whatsapp_name} deleted from database.")
+
     conn.commit()
     cursor.close()
     conn.close()
@@ -59,7 +66,7 @@ def delete_existing_profile(whatsapp_name):
     conn.close()
 
 def insert_chats(whatsapp_name, whatsapp_history):
-    chats = format_chinese_data(whatsapp_history) # get_all_message_objects(whatsapp_history)
+    chats = format_data(whatsapp_history) # get_all_message_objects(whatsapp_history)
 
     conn = sqlite3.connect(f'/Users/matthewtaruno/Library/Mobile Documents/com~apple~CloudDocs/Dev/type-like-you/data/db/chat.db')
     cursor = conn.cursor()
@@ -162,8 +169,8 @@ if __name__ == "__main__":
     # initialize_database_tables()   
     
     # insert_chats(whatsapp_name, "whatsapp_history", "/Users/matthewtaruno/Library/Mobile Documents/com~apple~CloudDocs/Dev/type-like-you/data/bryan.txt")
-
-    delete_existing_profile(whatsapp_name)
+    format_data()
+    # delete_existing_profile(whatsapp_name)
     # show_tables(cursor)
     # show_table('whatsapp_history')
     # show_table('session_conversations')
