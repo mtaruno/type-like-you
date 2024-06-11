@@ -1,15 +1,36 @@
 from inference.api import query_gpt4, get_system_prompt
 import argparse
 from sqlite_actions import get_profile
+from typing import List
 
 
-def get_response(user_message : str, whatsapp_name : str) -> str:
+def get_response(history_objs: List[dict], user_message : str, whatsapp_name : str) -> str:
     messages = []
+    
+    # add system prompt
+    messages.insert(0, initialize_conversation(whatsapp_name))
 
-    messages.append(initialize_conversation(whatsapp_name))
-
+    # add history from their list
+    for obj in history_objs:
+        messages.append(obj)
+    
     # add user content
     messages.append(user_message)
+    
+    return query_gpt4(messages=messages, model="gpt-4o", max_tokens=1000)
+
+
+def get_regular_response(history_objs: List[dict], user_message : str, whatsapp_name : str) -> str:
+    messages = []
+
+    # # add history from their list
+    # for obj in history_objs:
+    #     messages.append(obj)
+    
+    # add user content
+    messages.append(user_message)
+
+    print(messages)
     
     return query_gpt4(messages=messages, model="gpt-4o", max_tokens=1000)
 
@@ -32,10 +53,10 @@ def initialize_conversation(whatsapp_name):
         user_slang_dictionary = profile["user_slang_dictionary"],
         emoji_distribution = profile["emoji_distribution"],
         emoji_messages_examples = profile["emoji_messages_examples"],
-        # example_conversation = profile["example_conversation"]
+        random_chunk = profile["chunk"] 
     )
-    print(f"System Prompt: {system_prompt}")
-    print(f"Tokens: {len(system_prompt.split())}") # gpt4o max context length is 128k
+    # print(f"System Prompt: {system_prompt}")
+    # print(f"Tokens: {len(system_prompt.split())}") # gpt4o max context length is 128k
     
     sys_obj ={"role": "system",
                     "content": system_prompt}

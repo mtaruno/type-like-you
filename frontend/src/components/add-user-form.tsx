@@ -111,10 +111,10 @@ export function AddUserForm({ setOpen }: { setOpen: any }) {
           )}
         />
 
-        {names && names.length != 2 && (
+        {/* {names && names.length != 2 && (
           <p>An error occurred while parsing the input file</p>
-        )}
-        {names && names.length == 2 && <FormField
+        )} */}
+        {names && <FormField
           control={form.control}
           name="other"
           render={({ field }) => (

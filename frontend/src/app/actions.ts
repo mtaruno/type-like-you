@@ -1,7 +1,7 @@
 // 'use server';
 import { History, RawHistory, Message, RawHistoryResponse, PostText, RawPostText, UploadHistory } from '@/lib/schemas';
 
-const url = "http://127.0.0.1:3420";
+const url = "http://127.0.0.1:5000";
 
 function check(response: Response) {
   if (!response.ok) {
@@ -40,6 +40,9 @@ export async function uploadHistory(
 ) {
   const response = await fetch(url + '/upload', {
     method: "POST",
+    headers: {
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify(data)
 
   });

@@ -28,25 +28,89 @@ def format_data(whatsapp_history: str):
 
     # CLEANING 
     # removing the data if the message entry of the JSON object contains the U+200E character or contains external content
-    parsed_data = [entry for entry in parsed_data if '\u200e' not in entry["message"] or contains_external_content(entry["message"])]
+    parsed_data = [entry for entry in parsed_data if '\u200e' not in entry["message"]] # or contains_external_content(entry["message"]
     
     return parsed_data
+
+
+def format_chinese_data(whatsapp_history: str):
+    # Regex pattern to parse the chat data
+    pattern = re.compile(r"\[(\d{1,2}/\d{1,2}/\d{2,4}), (\d{1,2}:\d{2}:\d{2} (?:AM|PM))\] ([^:]+): (.+)")
+    
+    # Create a list to hold the parsed data
+    parsed_data = []
+    
+    for line in whatsapp_history.split("\n"):
+        match = pattern.match(line)
+        if match:
+            date, time, name, message = match.groups()
+            entry = {
+                "date": date,
+                "time": time,
+                "name": name,
+                "message": message
+            }
+            parsed_data.append(entry)
+    
+    # Remove entries with the U+200E character or containing omitted content
+    parsed_data = [entry for entry in parsed_data if '\u200e' not in entry["message"] and 'omitted' not in entry["message"]]
+    
+    return parsed_data
+
+
+
+
+# def txt_to_json(whatsapp_name, person_path):
+#     # Read the text file
+#     with open(person_path, 'r', encoding='utf-8') as file:
+#         whatsapp_history = file.read()
+    
+#     # Format the data
+#     formatted_data = format_data(whatsapp_history)
+    
+#     # Create the final JSON structure
+#     data = {
+#         "whatsapp_name": whatsapp_name,
+#         "whatsapp_history": formatted_data
+#     }
+    
+#     # Write to a JSON file
+#     json_path = f"{person_path}.json"
+#     with open(json_path, "w", encoding='utf-8') as f:
+#         json.dump(data, f, ensure_ascii=False, indent=4)
+    
+#     print(f"Data has been written to {json_path}")
+    
 
 def contains_external_content(message):
     return bool(re.search(r'http[s]?://|www\.', message))
 
-def txt_to_json(whatsapp_name,person_path):
-    # stores the txt file into a json file
-    history = read_file(person_path)
-    data = { "whatsapp_name": whatsapp_name,
-        "whatsapp_history": history
-    }
-    json_path = f"{person_path}.json"
-    with open(json_path, "w") as f:
-        json.dump(data, f, indent=4)
+# def txt_to_json(whatsapp_name,person_path):
+#     # stores the txt file into a json file
+#     history = read_file(person_path)
+#     data = { "whatsapp_name": whatsapp_name,
+#         "whatsapp_history": history
+#     }
+#     json_path = f"{person_path}.json"
+#     with open(json_path, "w") as f:
+#         json.dump(data, f, indent=4)
 
-    print(f"Data has been written to {json_path}")
+#     print(f"Data has been written to {json_path}")
     
+
+def txt_to_json(whatsapp_name, person_path):
+    history_lines = read_file(person_path)
+    messages = history_lines
+    
+    data = {
+        "whatsapp_name": whatsapp_name,
+        "user_slang_dictionary": "" ,
+        "whatsapp_history": messages
+    }
+    
+    json_path = f"{person_path}.json"
+    with open(json_path, "w", encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=4)
 
 def get_messages(person_path: str, lines) -> List[str]:
     parsed_data = format_data(read_file(person_path))
@@ -71,6 +135,6 @@ def representative_retriever(data: List[str]) -> List[str]:
 
 
 if __name__ == "__main__":
-    whatsapp_name = "Eggy Alicloud"
-    txt_to_json(whatsapp_name, "data/eggy.txt")
+    whatsapp_name = "Mum"
+    txt_to_json(whatsapp_name, "data/mum.txt")
     # print(set([i["name"] for i in get_all_message_objects("data/darlin.txt")]))

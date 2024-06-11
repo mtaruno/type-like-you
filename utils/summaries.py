@@ -1,12 +1,91 @@
 '''
 Helper functions that capture people's different conversational tendencies.
 '''
-
 import sqlite3
 import re
 from collections import Counter
 import emoji
+import re
+from collections import Counter
+from langdetect import detect
+import random
 
+
+def languageDistribution(cursor, whatsapp_name):
+    """
+    Returns the distribution of languages used in the conversation history.
+    
+    Args:
+        cursor (sqlite3.Cursor): SQLite cursor object.
+        whatsapp_name (str): Name of the WhatsApp user to analyze.
+    
+    Returns:
+        str: String representation of the language distribution.
+    """
+    cursor.execute('''
+        SELECT message FROM whatsapp_history WHERE whatsapp_name = ?
+    ''', (whatsapp_name, ))
+    
+    messages = cursor.fetchall()
+    languages = []
+    
+    for message in messages:
+        try:
+            lang = detect(message[0])
+            languages.append(lang)
+        except:
+            continue
+    
+    language_counts = Counter(languages)
+    return ', '.join([f'{lang}: {count}' for lang, count in language_counts.items()])
+
+def retrieveChunk(cursor, whatsapp_name, window=30):
+    """
+    Randomly retrieves a chunk of conversation between the user and the specified person.
+    
+    Args:
+        cursor (sqlite3.Cursor): SQLite cursor object.
+        whatsapp_name (str): Name of the WhatsApp user to analyze.
+        window (int): Number of messages to include in the chunk.
+    
+    Returns:
+        str: Formatted string of the conversation chunk.
+    """
+    cursor.execute('''
+        SELECT name, message FROM whatsapp_history WHERE whatsapp_name = ?
+    ''', (whatsapp_name, ))
+    
+    messages = cursor.fetchall()
+    if len(messages) < window:
+        window = len(messages)
+    
+    start_index = random.randint(0, len(messages) - window)
+    chunk = messages[start_index:start_index + window]
+    
+    return '\n'.join([f'{name}: {message}' for name, message in chunk])
+
+def laughExamples(cursor, whatsapp_name, window=30):
+    """
+    Returns examples of when and how the user usually laughs in the conversation history.
+    
+    Args:
+        cursor (sqlite3.Cursor): SQLite cursor object.
+        whatsapp_name (str): Name of the WhatsApp user to analyze.
+        window (int): Number of messages to retrieve for laughter examples.
+    
+    Returns:
+        str: Formatted string of messages containing laughter.
+    """
+    laugh_patterns = re.compile(r'\b(?:haha|hahaha|lol|lmao|rofl|😆|😂|🤣)\b', re.IGNORECASE)
+    
+    cursor.execute('''
+        SELECT message FROM whatsapp_history WHERE whatsapp_name = ?
+    ''', (whatsapp_name, ))
+    
+    messages = cursor.fetchall()
+    laugh_messages = [message[0] for message in messages if laugh_patterns.search(message[0])]
+    
+    return '\n'.join(laugh_messages[:window])
 
 
 def countMessages(cursor, whatsapp_name):
@@ -177,7 +256,9 @@ if __name__ == "__main__":
     print(sentenceLengthDistribution(cursor, whatsapp_name))
     print(countMessages(cursor, whatsapp_name))
     print(emojiMessagesExamples(cursor, whatsapp_name, 20))
-
+    print(languageDistribution(cursor, whatsapp_name))
+    print(retrieveChunk(cursor, whatsapp_name, 50))
+    print(laughExamples(cursor, whatsapp_name, 10))
 
 
     
