@@ -1,7 +1,7 @@
 // 'use server';
 import { History, UploadHistory, UploadChatResponse, UploadChat, RawUploadChat } from '@/lib/schemas';
 
-const url = "http://127.0.0.1:3420";
+const url = "http://127.0.0.1:5000";
 
 function check(response: Response) {
   if (!response.ok) {
@@ -59,6 +59,9 @@ export async function postText({ id, text }: UploadChat): Promise<UploadChatResp
   const response = await fetch(url + '/chat', {
     body: JSON.stringify(body),
     method: "POST",
+    headers: {
+      'Content-Type': 'application/json',
+    }
   });
   check(response);
 
