@@ -49,12 +49,12 @@ def chat():
     }   
 
     response = get_response(history_objs, message_obj, whatsapp_name)
-    regular_response = get_regular_response(history_objs, message_obj, whatsapp_name)
+    # regular_response = get_regular_response(history_objs, message_obj, whatsapp_name)
 
     # Save the user message to the session_database
     store_session_message_and_response(whatsapp_name, user_message, response)
 
-    return jsonify({'ditto_message': response, 'gpt4_message': regular_response})
+    return jsonify({'ditto_message': response, 'gpt4_message': "left out"})
 
 # Endpoint for returning all the session history in JSON format that can be used for the prompt
 @app.route('/history', methods=['GET'])

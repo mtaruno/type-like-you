@@ -59,7 +59,7 @@ def delete_existing_profile(whatsapp_name):
     conn.close()
 
 def insert_chats(whatsapp_name, whatsapp_history):
-    chats = format_data(whatsapp_history) # get_all_message_objects(whatsapp_history)
+    chats = format_chinese_data(whatsapp_history) # get_all_message_objects(whatsapp_history)
 
     conn = sqlite3.connect(f'/Users/matthewtaruno/Library/Mobile Documents/com~apple~CloudDocs/Dev/type-like-you/data/db/chat.db')
     cursor = conn.cursor()

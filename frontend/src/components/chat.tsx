@@ -44,7 +44,17 @@ export default function Chat() {
         <div className="flex flex-col gap-y-2 mx-4">
           {/* Empty Div for some space */}
           <Gap />
-          {data?.[selected]?.messages && data[selected].messages.map(({ speaker, text }, index) => <Message speaker={speaker} text={text} key={index} />)}
+          {data?.[selected]?.messages && data[selected].messages.map(({ speaker, text }, index) => {
+
+            const splitText = text.split(/\r?\n/)
+              .filter((text) => text != "")
+              .map((text) => {
+                return <Message speaker={speaker} text={text} key={index} />;
+
+              });
+            return splitText;
+          }
+          )}
           <Gap ref={ref} />
         </div>
       </ScrollArea>
