@@ -1,5 +1,5 @@
 // 'use server';
-import { History, RawHistory, Message, RawHistoryResponse, PostText, RawPostText, UploadHistory } from '@/lib/schemas';
+import { History, UploadHistory, UploadChatResponse, UploadChat, RawUploadChat } from '@/lib/schemas';
 
 const url = "http://127.0.0.1:5000";
 
@@ -12,14 +12,10 @@ function check(response: Response) {
 export async function fetchHistory(): Promise<History[]> {
   const response = await fetch(url + '/history');
   check(response);
-  const json = await response.json() as RawHistoryResponse;
-  const objects: History[] = json["data"].map((history) => ({
-    id: history["id"],
-    username: history["username"],
-    messages: history["messages"].map(message => ({
-      speaker: message["speaker"],
-      text: message["message"],
-    })),
+  const json = await response.json();
+  const objects: History[] = json["data"].map((session: any) => ({
+    username: session["whatsapp_name"],
+    messages: session["messages"],
   }));
 
   return objects;
@@ -52,10 +48,10 @@ export async function uploadHistory(
 }
 
 
-export async function postText({ id, text }: PostText): Promise<History[]> {
-  const body: RawPostText = {
-    id,
-    text
+export async function postText({ id, text }: UploadChat): Promise<UploadChatResponse> {
+  const body: RawUploadChat = {
+    whatsapp_name: id,
+    message: text
   }
   const response = await fetch(url + '/chat', {
     body: JSON.stringify(body),
@@ -63,15 +59,7 @@ export async function postText({ id, text }: PostText): Promise<History[]> {
   });
   check(response);
 
-  const json = await response.json() as RawHistoryResponse;
-  const objects: History[] = json["data"].map((history) => ({
-    id: history["id"],
-    username: history["username"],
-    messages: history["messages"].map(message => ({
-      speaker: message["speaker"],
-      text: message["message"],
-    })),
-  }));
-  return objects;
+  const json = await response.json() as UploadChatResponse;
+  return json;
 
 }

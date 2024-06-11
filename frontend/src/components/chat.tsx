@@ -6,14 +6,14 @@ import { Message as MessageInterface } from '@/lib/schemas';
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "./ui/button";
 import { useChatStore } from "./providers";
-import ChatInput from "./chat-input";
+import { forwardRef, useRef } from "react";
 
-function Gap() {
+const Gap = forwardRef(function Gap(_, ref: React.LegacyRef<HTMLDivElement>) {
   return (
 
-    <div className="h-4" />
+    <div className="h-4" ref={ref}></div>
   )
-}
+})
 
 function Message({ speaker, text }: MessageInterface) {
   return <div className="w-full">
@@ -35,14 +35,17 @@ export default function Chat() {
   const { data } = useQuery({ queryKey: ['history'], queryFn: fetchHistory });
   const selected = useChatStore((state) => state.selected);
 
-  if (selected != -1) {
+  // TODO: Implement Scroll to bottom feature later
+  const ref = useRef(null);
+
+  if (selected != "") {
     return <div className="h-full flex flex-col">
       <ScrollArea className="h-full">
         <div className="flex flex-col gap-y-2 mx-4">
           {/* Empty Div for some space */}
           <Gap />
-          {data?.[selected]?.messages && data[selected].messages.map((message) => Message(message))}
-          <Gap />
+          {data?.[selected]?.messages && data[selected].messages.map(({ speaker, text }, index) => <Message speaker={speaker} text={text} key={index} />)}
+          <Gap ref={ref} />
         </div>
       </ScrollArea>
     </div>;
