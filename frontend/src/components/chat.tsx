@@ -6,7 +6,7 @@ import { Message as MessageInterface } from '@/lib/schemas';
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "./ui/button";
 import { useChatStore } from "./providers";
-import { forwardRef, useRef } from "react";
+import { forwardRef, useEffect, useRef } from "react";
 
 const Gap = forwardRef(function Gap(_, ref: React.LegacyRef<HTMLDivElement>) {
   return (
@@ -36,7 +36,11 @@ export default function Chat() {
   const selected = useChatStore((state) => state.selected);
 
   // TODO: Implement Scroll to bottom feature later
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    ref.current?.scrollIntoView({ behavior: "smooth" });
+
+  }, [data]);
 
   if (selected != -1) {
     return <div className="h-full flex flex-col">
@@ -53,10 +57,12 @@ export default function Chat() {
 
               });
             return splitText;
+
           }
           )}
-          <Gap ref={ref} />
+          <Gap />
         </div>
+        <div ref={ref} />
       </ScrollArea>
     </div>;
   } else {
