@@ -1,12 +1,10 @@
 # Ditto (type-like-you)
-
-
+![logo_transparent](https://github.com/mtaruno/type-like-you/assets/44710581/2bb5330b-667b-4228-b0e0-2c3cbe00d9b0)
 
 ### Usage Instructions
 
 First, export your WhatsApp Chat in the form of a text file (I usually put it in `/data`) as shown the in picture: 
-
-
+<img width="750" alt="whatsapp-export" src="https://github.com/mtaruno/type-like-you/assets/44710581/5c7a194e-ab38-4105-b042-e56c9ae6c215">
 
 Then make sure the in `parse.py` that the regex expression expressed by "pattern" can correctly parse the WhatsApp message. (I am currently developing support for things other than WhatsApp exports and perhaps a more general regex expression). You are able to adjust as necessary, I may recommend you check out https://regexr.com/ to make sure you have the right pattern.
 
