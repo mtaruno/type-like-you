@@ -1,6 +1,5 @@
 # Ditto (type-like-you)
-![logo_transparent](https://github.com/mtaruno/type-like-you/assets/44710581/2bb5330b-667b-4228-b0e0-2c3cbe00d9b0)
-
+<img src="https://github.com/mtaruno/type-like-you/assets/44710581/2bb5330b-667b-4228-b0e0-2c3cbe00d9b0" alt="logo_transparent" width="50">
 ### Usage Instructions
 
 First, export your WhatsApp Chat in the form of a text file (I usually put it in `/data`) as shown the in picture: 
