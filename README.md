@@ -59,6 +59,6 @@ Check the `config.yml` file for the full prompt. We include:
 - Spelling: Token Distribution
 - Language: Langauge distribution
 - Slang Usage: User Slang Dictionary (during the upload pipeline we give an option to the user (perhaps after extensive testing of conversation to give custom slang definition in a specific language) 
-- Key Scenarios: Random retriever to get a subset (which may be diversified to make it more representative of the person's tone) of this conversation to put into the context of GPT-4o's 128k context window. The context will also contain a bunch of instructions to copy more nuances about you.
+- Key Scenarios: Random retriever to get a subset (which may be diversified to make it more representative of the person's tone) of this conversation to put into the context of GPT-4o's 128k context window.
 - Extra Tips
 - Response Format
