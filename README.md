@@ -36,7 +36,7 @@ Run the Flask server to enable requests to the API endpoints.
 python server.py
 ```
 
-Then run the front-end to use Ditto:
+Then `cd` into `/frontend` and run the front-end to use Ditto:
 ```
 pnpm dev
 ```
