@@ -39,15 +39,21 @@ def get_system_prompt():
 
 if __name__ == "__main__":
 
-    system_prompt = "Hi I am ChatGPT and here to help you."
-    prompt_text = "Explain the significance of machine learning in healthcare."
+    system_prompt = "Please turn the following text into perfect Latex format for Overleaf. It's for my Tsinghua thesis."
+
+    with open("data/thesis/report.txt", "r") as f: 
+        report = f.read()
+    
     messages = [
                 {
                     "role": "system",
                     "content": system_prompt,
                 }, {
                     "role": "user",
-                    "content": prompt_text,
+                    "content": report,
                 }
             ]
-    print(query_gpt4(messages=messages,  model="gpt-4o", max_tokens=150))
+    formatted = query_gpt4(messages=messages,  model="gpt-4o", max_tokens=128000)
+
+    with open("data/thesis/report_formatted.txt", "w") as f:
+        f.write(formatted)

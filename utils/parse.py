@@ -11,12 +11,14 @@ def read_file(person_path):
 def format_data(whatsapp_history: str):
     # regex to parse data 
     # pattern = re.compile(r"\[(\d{1,2}/\d{1,2}/\d{2,4}), (\d{1,2}:\d{2}:\d{2} (?:AM|PM))\] ([^:]+): (.+)") # metilda
+    pattern = re.compile(r"(\d{1,2}/\d{1,2}/\d{2,4}), (\d{1,2}:\d{2}(?:AM|PM|:\d{2})?) - (.*?): (.*)") # cherry
     # pattern = re.compile(r"\[(\d{2}/\d{2}/\d{2}), (\d{2}\.\d{2}\.\d{2})\] (\w+ \w+): (.+)")
 
-    pattern = re.compile(r"\[(\d{1,2}/\d{1,2}/\d{2,4}),\s+(\d{1,2}:\d{2})\s*-\s*([^:]+): (.+)") # gog
+    # pattern = re.compile(r"\[(\d{1,2}/\d{1,2}/\d{2,4}),\s+(\d{1,2}:\d{2})\s*-\s*([^:]+): (.+)") # gog
 
     # pattern = re.compile(r"\[(\d{1,2}/\d{1,2}/\d{2,4}),\s+(\d{1,2}:\d{2}:\d{2}[\u202f\s]*(?:AM|PM))\] ([^:]+): (.+)")  # yaoming
     # pattern = re.compile(r"\[(\d{2}/\d{2}/\d{2}), (\d{2}\.\d{2}\.\d{2})\] ([^:]+): (.+)") # matt
+    # pattern = re.compile(r"\[(\d{1,2}/\d{1,2}/\d{2,4}),\s+(\d{1,2}:\d{2}:\d{2}\s*(?:AM|PM)?)\] ([^:]+): (.+)") # trisha
 
 
     # making into json list format
