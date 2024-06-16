@@ -4,7 +4,7 @@
 
 
 ### Introduction
-ChatGPT has been an amazing direct advancement to human-computer interaction. However, in human-human casual interaction, when using text to converse in a conversational interface, we almost never talk and communicate the way default ChatGPT converses. In `talk-like-you`, we explore how to use RAG and in-context-learning to achieve a talking style that mimics the way we chat every day to a personal level (as you can upload your own WhatsApp conversation data). 
+ChatGPT has been an amazing direct advancement to human-computer interaction. However, in human-human casual interaction, when using text to converse in a conversational interface, we almost never talk and communicate the way default ChatGPT converses. With `Ditto`, we explore how to use RAG and in-context-learning to achieve a talking style that mimics the way we chat every day to a personal level (as you can upload your own WhatsApp conversation data). 
 
 Why do we use personal WhatsApp data? Online conversational datasets available don't typically capture the broad scenario of everyday texting conversations. Example of an online conversation (that feels robotic and not like how we actually converse in messaging platforms): 
 
