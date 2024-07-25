@@ -1,6 +1,7 @@
 import re
 from typing import List
 import json 
+from dataclasses import dataclass
 
 
 def read_file(person_path):
@@ -123,6 +124,7 @@ def get_all_message_objects(whatsapp_history_path: str) -> List[str]:
 if __name__ == "__main__":
 
     mum = Profile(whatsapp_name = "Mum",person_path= "data/mum.txt", pattern = re.compile(r"\[(\d{1,2}/\d{1,2}/\d{2,4}), (\d{1,2}:\d{2}:\d{2} (?:AM|PM))\] ([^:]+): (.+)"))
+    
     
     with open("/Users/matthewtaruno/Library/Mobile Documents/com~apple~CloudDocs/Dev/type-like-you/data/boas.txt", "r", encoding='utf-8') as f:
         data = f.read()

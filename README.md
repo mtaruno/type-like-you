@@ -62,3 +62,9 @@ Check the `config.yml` file for the full prompt. We include:
 - Key Scenarios: Random retriever to get a subset (which may be diversified to make it more representative of the person's tone) of this conversation to put into the context of GPT-4o's 128k context window.
 - Extra Tips
 - Response Format
+
+### Repo Map
+
+- `research` directory includes a few research papers tangentially related to this work.  
+- `ditto` directory contains the bulk of the work. `server.py` contains high level usages of ditto, leveraging utilities in the `utils` directory. 
+- The sqlite database is stored in `/data/db/chat.db`

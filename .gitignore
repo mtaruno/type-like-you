@@ -10,3 +10,4 @@
 /frontend/yarn-error.log*
 
 .DS_STORE
+.aider*

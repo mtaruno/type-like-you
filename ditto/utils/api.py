@@ -26,7 +26,7 @@ def query_gpt4(messages, model=models["gpt-4"], max_tokens=100):
         max_tokens=max_tokens,
         stream = False
         )
-    print(response)
+
     return response.choices[0].message.content
 
 def get_yaml(file_path):
@@ -39,10 +39,10 @@ def get_system_prompt():
 
 if __name__ == "__main__":
 
-    system_prompt = "Please turn the following text into perfect Latex format for Overleaf. It's for my Tsinghua thesis."
+    system_prompt = "You are an intelligent assistant"
 
-    with open("data/thesis/report.txt", "r") as f: 
-        report = f.read()
+    # with open("data/thesis/report.txt", "r") as f: 
+    #     report = f.read()
     
     messages = [
                 {
@@ -50,10 +50,7 @@ if __name__ == "__main__":
                     "content": system_prompt,
                 }, {
                     "role": "user",
-                    "content": report,
+                    "content": "teach me how to use aider",
                 }
             ]
-    formatted = query_gpt4(messages=messages,  model="gpt-4o", max_tokens=128000)
-
-    with open("data/thesis/report_formatted.txt", "w") as f:
-        f.write(formatted)
+    print(query_gpt4(messages=messages,  model="gpt-4o", max_tokens=4096) )
