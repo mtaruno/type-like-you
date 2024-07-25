@@ -1,4 +1,4 @@
-from inference.api import query_gpt4, get_system_prompt
+from ditto.utilsinference.api import query_gpt4, get_system_prompt
 import argparse
 from sqlite_actions import get_profile
 from typing import List

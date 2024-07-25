@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
-from response import get_response, get_regular_response
+from ditto.utils.response import get_response, get_regular_response
 from sqlite_actions import insert_whatsapp_history_and_update_profile, store_session_message_and_response, get_history_obj, get_history_for_endpoint
 from utils.sqlite_db import show_table, show_tables, delete_user_history
 
@@ -25,7 +25,6 @@ def upload():
 
     # Save the chat history to the database and update profile 
     insert_whatsapp_history_and_update_profile(whatsapp_name, whatsapp_history, emoji_examples_limit, topn_words_limit, user_slang_dictionary)
-
 
     # Return a success message
     return jsonify({'message': 'Chat history and profile updated successfully'}), 200

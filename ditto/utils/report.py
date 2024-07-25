@@ -1,5 +1,5 @@
 from utils.parse import get_all_message_objects
-from inference.api import query_gpt4
+from ditto.utils.api import query_gpt4
 import argparse
 
 

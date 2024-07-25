@@ -4,22 +4,31 @@ import json
 
 
 def read_file(person_path):
-    with open(person_path, "r", encoding='utf-8') as f:
-        data = f.read()
+   
     return data
+
+
+# NOTE: Profile class not implemented yet
+@dataclass
+class Profile:
+    whatsapp_name: str
+    person_path: str
+    pattern: str
+    
+    def test_parser(self):
+        pass
+    
+
 
 def format_data(whatsapp_history: str):
     # regex to parse data 
-    # pattern = re.compile(r"\[(\d{1,2}/\d{1,2}/\d{2,4}), (\d{1,2}:\d{2}:\d{2} (?:AM|PM))\] ([^:]+): (.+)") # metilda
-    pattern = re.compile(r"(\d{1,2}/\d{1,2}/\d{2,4}), (\d{1,2}:\d{2}(?:AM|PM|:\d{2})?) - (.*?): (.*)") # cherry
+    pattern = re.compile(r"\[(\d{1,2}/\d{1,2}/\d{2,4}), (\d{1,2}:\d{2}:\d{2} (?:AM|PM))\] ([^:]+): (.+)") # metilda
+    # pattern = re.compile(r"(\d{1,2}/\d{1,2}/\d{2,4}), (\d{1,2}:\d{2}(?:AM|PM|:\d{2})?) - (.*?): (.*)") # cherry
     # pattern = re.compile(r"\[(\d{2}/\d{2}/\d{2}), (\d{2}\.\d{2}\.\d{2})\] (\w+ \w+): (.+)")
-
-    # pattern = re.compile(r"\[(\d{1,2}/\d{1,2}/\d{2,4}),\s+(\d{1,2}:\d{2})\s*-\s*([^:]+): (.+)") # gog
-
+    # pattern = re.compile(r"\[(\d{1,2}/\d{1,2}/\d{2,4}),\s+(\d{1,2}:\d{2})\s*-\s*([^:]+): (.+)") # goga
     # pattern = re.compile(r"\[(\d{1,2}/\d{1,2}/\d{2,4}),\s+(\d{1,2}:\d{2}:\d{2}[\u202f\s]*(?:AM|PM))\] ([^:]+): (.+)")  # yaoming
     # pattern = re.compile(r"\[(\d{2}/\d{2}/\d{2}), (\d{2}\.\d{2}\.\d{2})\] ([^:]+): (.+)") # matt
     # pattern = re.compile(r"\[(\d{1,2}/\d{1,2}/\d{2,4}),\s+(\d{1,2}:\d{2}:\d{2}\s*(?:AM|PM)?)\] ([^:]+): (.+)") # trisha
-
 
     # making into json list format
     parsed_data = []
@@ -110,17 +119,14 @@ def get_all_message_objects(whatsapp_history_path: str) -> List[str]:
         conversation.append(entry)
     return conversation
 
-# TODO: This may be where I start to work with FAISS vector search functions
-def representative_retriever(data: List[str]) -> List[str]:
-    conversation = []
-    return conversation
-
 
 if __name__ == "__main__":
-    # whatsapp_name = "Mum"
-    # txt_to_json(whatsapp_name, "data/mum.txt")
-    # print(set([i["name"] for i in get_all_message_objects("data/darlin.txt")]))
-    data = read_file("/Users/matthewtaruno/Library/Mobile Documents/com~apple~CloudDocs/Dev/type-like-you/data/boas.txt")
+
+    mum = Profile(whatsapp_name = "Mum",person_path= "data/mum.txt", pattern = re.compile(r"\[(\d{1,2}/\d{1,2}/\d{2,4}), (\d{1,2}:\d{2}:\d{2} (?:AM|PM))\] ([^:]+): (.+)"))
+    
+    with open("/Users/matthewtaruno/Library/Mobile Documents/com~apple~CloudDocs/Dev/type-like-you/data/boas.txt", "r", encoding='utf-8') as f:
+        data = f.read()
+
     with open("/Users/matthewtaruno/Library/Mobile Documents/com~apple~CloudDocs/Dev/type-like-you/data/boas.json", "w") as f:
         # store it all in a string
         json.dump(data, f, ensure_ascii=False, indent=4)
