@@ -120,5 +120,9 @@ if __name__ == "__main__":
     # whatsapp_name = "Mum"
     # txt_to_json(whatsapp_name, "data/mum.txt")
     # print(set([i["name"] for i in get_all_message_objects("data/darlin.txt")]))
-    print(format_data(read_file("data/goga_stephen.txt")))
+    data = read_file("/Users/matthewtaruno/Library/Mobile Documents/com~apple~CloudDocs/Dev/type-like-you/data/boas.txt")
+    with open("/Users/matthewtaruno/Library/Mobile Documents/com~apple~CloudDocs/Dev/type-like-you/data/boas.json", "w") as f:
+        # store it all in a string
+        json.dump(data, f, ensure_ascii=False, indent=4)
+
 
